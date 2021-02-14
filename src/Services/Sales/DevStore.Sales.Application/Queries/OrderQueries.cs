@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DevStore.Sales.Application.Queries.ViewModels;
+
+using DevStore.Sales.Application.Queries.Dtos;
 using DevStore.Sales.Domain;
 
 namespace DevStore.Sales.Application.Queries
@@ -41,9 +42,7 @@ namespace DevStore.Sales.Application.Queries
                 {
                     CourseId = item.CourseId,
                     CourseName = item.CourseName,
-                    Quantity = item.Quantity,
-                    UnityValue = item.ItemValue,
-                    Total = item.ItemValue * item.Quantity
+                    Price = item.Price
                 });
             }
 

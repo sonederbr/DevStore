@@ -15,7 +15,7 @@ namespace DevStore.Catalog.Application.Services
         Task CreateCourse(CourseDto courseDto);
         Task UpdateCourse(CourseDto courseDto);
 
-        Task<CourseDto> WithdrawStock(Guid id, int quantity);
-        Task<CourseDto> ChargeStock(Guid id, int quantity);
+        Task<CourseDto> EnrolCourse(Guid id);
+        Task<CourseDto> DisenrollCourse(Guid id);
     }
 }

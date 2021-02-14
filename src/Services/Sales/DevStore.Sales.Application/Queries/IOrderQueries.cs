@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevStore.Sales.Application.Queries.ViewModels;
+
+using DevStore.Sales.Application.Queries.Dtos;
 
 namespace DevStore.Sales.Application.Queries
 {

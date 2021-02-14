@@ -1,4 +1,4 @@
-﻿@model DevStore.Sales.Application.Queries.ViewModels.CartDto
+﻿@model DevStore.Sales.Application.Queries.Dtos.CartDto
 @{
     ViewData["Title"] = "Index";
 }
@@ -15,9 +15,9 @@
                         <thead>
                             <tr>
                                 <th>Course</th>
-                                <th>Quantity</th>
+                                <th> </th>
+                                <th> </th>
                                 <th class="text-center">Price</th>
-                                <th class="text-center">Price Total</th>
                                 <th> </th>
                             </tr>
                         </thead>
@@ -30,26 +30,13 @@
                                         <td class="col-sm-5 col-md-5">
                                             <div class="media">
                                                 <div class="media-body">
-                                                    <h4 class="media-heading"><a asp-controller="ShowRoom" asp-action="OrderDetail" asp-route-id="@item.CourseId">@item.CourseName</a></h4>
+                                                    <h4 class="media-heading"><a asp-controller="ShowRoom" asp-action="CourseDetail" asp-route-id="@item.CourseId">@item.CourseName</a></h4>
                                                 </div>
                                             </div>
                                         </td>
-
-                                        <td class="col-sm-2 col-md-2" style="text-align: center">
-                                            <form method="post" asp-controller="Cart" asp-action="UpdateItem">
-                                                <input type="hidden" id="Id" name="Id" value="@item.CourseId" />
-                                                <div class="row" style="float: left">
-                                                    <input style="width: 70px" type="text" class="form-control" name="quantity" id="quantity" value="@item.Quantity">
-                                                </div>
-                                                <div class="row" style="float: right">
-                                                    <button type="submit" class="btn btn-success">
-                                                        <span class="fas fa-sync"></span>
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </td>
-                                        <td class="col-sm-1 col-md-1 text-center"><strong>@item.UnityValue.ToString("C")</strong></td>
-                                        <td class="col-sm-1 col-md-1 text-center"><strong>@item.Total.ToString("C")</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="col-sm-1 col-md-1 text-center"><strong>@item.Price.ToString("C")</strong></td>
 
                                         <td class="col-sm-1 col-md-1">
                                             <form method="post" asp-controller="Cart" asp-action="RemoveItem">
@@ -71,9 +58,8 @@
                                 <td class="text-right"><h5><strong>@Model.SubTotal.ToString("C")</strong></h5></td>
                             </tr>
                             <tr>
-                                <td> </td>
-                                <td colspan="2">
-                                    <form method="post" asp-controller="Cart" asp-action="ApplyVoucher">
+                                <td colspan="3">
+                                    <form method="post" asp-controller="Cart" asp-action="ApplyVoucher" class="float-right">
                                         <div class="row" style="float: left">
                                             <input placeholder="Voucher" style="width: 150px" type="text" class="form-control" name="VoucherCode" id="VoucherCode" value="@Model.VoucherCode">
                                         </div>

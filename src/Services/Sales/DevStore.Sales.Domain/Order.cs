@@ -51,7 +51,7 @@ namespace DevStore.Sales.Domain
 
         public void CalculateOrderValue()
         {
-            TotalValue = OrderItems.Sum(p => p.CalculateValue());
+            TotalValue = OrderItems.Sum(p => p.Price);
             CalculateOrderValueWithDiscount();
         }
 
@@ -97,13 +97,10 @@ namespace DevStore.Sales.Domain
             if (HasOrderItem(item))
             {
                 var itemInOrder = _orderItems.FirstOrDefault(p => p.CourseId == item.CourseId);
-                itemInOrder.AddQuantity(item.Quantity);
                 item = itemInOrder;
 
                 _orderItems.Remove(itemInOrder);
             }
-
-            item.CalculateValue();
             _orderItems.Add(item);
 
             CalculateOrderValue();
@@ -134,12 +131,6 @@ namespace DevStore.Sales.Domain
             _orderItems.Add(item);
 
             CalculateOrderValue();
-        }
-
-        public void UpdateOfQuantityOfItems(OrderItem item, int unidades)
-        {
-            item.UpdateOfQuantityOfItems(unidades);
-            UpdateItem(item);
         }
 
         public void MakeDraft()

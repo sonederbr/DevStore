@@ -8,40 +8,23 @@ namespace DevStore.Sales.Domain
         public Guid OrderId { get; private set; }
         public Guid CourseId { get; private set; }
         public string CourseName { get; private set; }
-        public int Quantity { get; private set; }
-        public decimal ItemValue { get; private set; }
+        public decimal Price { get; private set; }
 
         // EF Rel.
         public Order Order { get; set; }
 
         protected OrderItem() { }
 
-        public OrderItem(Guid courseId, string courseName, int quantity, decimal itemValue)
+        public OrderItem(Guid courseId, string courseName, decimal price)
         {
             CourseId = courseId;
             CourseName = courseName;
-            Quantity = quantity;
-            ItemValue = itemValue;
+            Price = price;
         }
 
         internal void AssociateOrder(Guid orderId)
         {
             OrderId = orderId;
-        }
-
-        public decimal CalculateValue()
-        {
-            return Quantity * ItemValue;
-        }
-
-        internal void AddQuantity(int quantity)
-        {
-            Quantity += quantity;
-        }
-
-        internal void UpdateOfQuantityOfItems(int quantity)
-        {
-            Quantity = quantity;
         }
 
         public override bool IsValid()

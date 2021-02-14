@@ -4,7 +4,7 @@ using MediatR;
 
 namespace DevStore.Catalog.Domain.Events
 {
-    public class CourseEventHandler : INotificationHandler<LowStockCourseEvent>
+    public class CourseEventHandler : INotificationHandler<AlmostFullCourseEvent>
     {
         private readonly ICourseRepository _courseRepository;
 
@@ -13,9 +13,9 @@ namespace DevStore.Catalog.Domain.Events
             _courseRepository = courseRepository;
         }
 
-        public async Task Handle(LowStockCourseEvent mensagem, CancellationToken cancellationToken)
+        public async Task Handle(AlmostFullCourseEvent mensagem, CancellationToken cancellationToken)
         {
-            var produto = await _courseRepository.GetById(mensagem.AggregateId);
+            var course = await _courseRepository.GetById(mensagem.AggregateId);
 
             // Enviar um email para aquisicao de mais produtos.
         }

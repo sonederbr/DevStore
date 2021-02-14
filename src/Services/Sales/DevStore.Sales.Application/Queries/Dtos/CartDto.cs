@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DevStore.Sales.Application.Queries.ViewModels
+namespace DevStore.Sales.Application.Queries.Dtos
 {
     public class CartDto
     {

@@ -1,4 +1,4 @@
-﻿namespace DevStore.Sales.Application.Queries.ViewModels
+﻿namespace DevStore.Sales.Application.Queries.Dtos
 {
     public class CartPaymentDto
     {
