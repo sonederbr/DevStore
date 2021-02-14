@@ -17,9 +17,5 @@
     <ProjectReference Include="..\..\Core\DevStore.Core\DevStore.Core.csproj" />
     <ProjectReference Include="..\DevStore.Catalog.Domain\DevStore.Catalog.Domain.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
 
 </Project>

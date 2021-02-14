@@ -74,11 +74,11 @@ namespace DevStore.WebApp.MVC.Controllers.Admin
         {
             if (quantidade > 0)
             {
-                await _courseAppService.ChargeStock(id, quantidade);
+                await _courseAppService.DisenrollCourse(id);
             }
             else
             {
-                await _courseAppService.WithdrawStock(id, quantidade);
+                await _courseAppService.EnrolCourse(id);
             }
 
             return View("Index", await _courseAppService.GetAll());

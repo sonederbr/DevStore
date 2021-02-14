@@ -1,4 +1,4 @@
-﻿@model DevStore.Sales.Application.Queries.ViewModels.CartDto
+﻿@model DevStore.Sales.Application.Queries.Dtos.CartDto
 @{
     ViewData["Title"] = "Index";
 }
@@ -25,9 +25,8 @@
                                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                                     <div>
                                         <h6 class="my-0">@item.CourseName</h6>
-                                        <small class="text-muted">@item.Quantity Unities</small>
                                     </div>
-                                    <span class="text-muted">@item.Total.ToString("C")</span>
+                                    <span class="text-muted">@item.Price.ToString("C")</span>
                                 </li>
                             }
 

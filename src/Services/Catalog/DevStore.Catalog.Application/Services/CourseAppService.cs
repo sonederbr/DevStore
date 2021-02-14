@@ -13,15 +13,15 @@ namespace DevStore.Catalog.Application.Services
     public class CourseAppService : ICourseAppService
     {
         private readonly ICourseRepository _courseRepository;
-        private readonly IStockService _stockService;
+        private readonly ICourseService _courseService;
         private readonly IMapper _mapper;
 
         public CourseAppService(ICourseRepository courseRepository, 
-                                 IStockService stockService,
+                                 ICourseService courseService,
                                  IMapper mapper)
         {
             _courseRepository = courseRepository;
-            _stockService = stockService;
+            _courseService = courseService;
             _mapper = mapper;
         }
 
@@ -61,21 +61,21 @@ namespace DevStore.Catalog.Application.Services
             await _courseRepository.UnitOfWork.Commit();
         }
 
-        public async Task<CourseDto> WithdrawStock(Guid id, int quantity)
+        public async Task<CourseDto> EnrolCourse(Guid id)
         {
-            if (!_stockService.WithdrawStocks(id, quantity).Result)
+            if (!_courseService.EnrolCourse(id).Result)
             {
-                throw new DomainException("Falha ao debitar estoque");
+                throw new DomainException("Falha ao entrar na vaga do curso.");
             }
 
             return _mapper.Map<CourseDto>(await _courseRepository.GetById(id));
         }
 
-        public async Task<CourseDto> ChargeStock(Guid id, int quantity)
+        public async Task<CourseDto> DisenrollCourse(Guid id)
         {
-            if (!_stockService.ChargeStock(id, quantity).Result)
+            if (!_courseService.DisenrollCourse(id).Result)
             {
-                throw new DomainException("Falha ao repor estoque");
+                throw new DomainException("Falha ao repor vaga do curso.");
             }
 
             return _mapper.Map<CourseDto>(await _courseRepository.GetById(id));
@@ -84,7 +84,7 @@ namespace DevStore.Catalog.Application.Services
         public void Dispose()
         {
             _courseRepository?.Dispose();
-            _stockService?.Dispose();
+            _courseService?.Dispose();
         }
     }
 }

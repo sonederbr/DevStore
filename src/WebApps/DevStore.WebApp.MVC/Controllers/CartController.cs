@@ -9,7 +9,7 @@ using DevStore.WebApp.MVC.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace NerdStore.WebApp.MVC.Controllers
+namespace DevStore.WebApp.MVC.Controllers
 {
     public class CartController : BaseController
     {
@@ -34,21 +34,29 @@ namespace NerdStore.WebApp.MVC.Controllers
 
         [HttpPost]
         [Route("my-cart")]
-        public async Task<IActionResult> AddItem(Guid id, int quantity)
+        public async Task<IActionResult> AddItem(Guid id)
         {
             var course = await _courseAppService.GetById(id);
             if (course == null) return BadRequest();
 
-            if (course.PlacesAvailable < quantity)
-            {
-                TempData["Erro"] = "Produto com estoque insuficiente";
-                return RedirectToAction("CourseDetail", "ShowRoom", new { id });
-            }
-
-            var command = new AddOrderItemCommand(ClientId, course.Id, course.Name, quantity, course.Price);
+            var command = new AddOrderItemCommand(ClientId, course.Id, course.Name, course.Price);
             await _mediatorHandler.SendCommand(command);
                        
             return RedirectToAction("CourseDetail", "ShowRoom", new { id });
+        }
+
+        [HttpPost]
+        [Route("remove-item")]
+        public async Task<IActionResult> RemoveItem(Guid id)
+        {
+            var course = await _courseAppService.GetById(id);
+            if (course == null) return BadRequest();
+
+            var command = new RemoveOrderItemCommand(ClientId, id);
+            await _mediatorHandler.SendCommand(command);
+
+
+            return View("Index", await _orderQueries.GetCartByClient(ClientId));
         }
     }
 }

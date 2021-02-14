@@ -26,7 +26,6 @@ namespace DevStore.Catalog.Data
             {
                 foreach (var product in produtcts)
                 {
-                    product.ChargeStock(10);
                     prd.HasData(product.MapCourseToAnonymousObject());
                     prd.OwnsOne(x => x.Specification)
                         .HasData(product.MapSpecificationOfCourseToAnonymousObject());
@@ -54,8 +53,8 @@ namespace DevStore.Catalog.Data
                 obj.Price,
                 obj.Image,
                 obj.Video,
-                obj.ClassSize,
-                obj.PlacesAvailable,
+                obj.EnrollimentLimit,
+                obj.TotalOfEnrolled,
                 CreatedDate = DateTime.Now
             };
         }

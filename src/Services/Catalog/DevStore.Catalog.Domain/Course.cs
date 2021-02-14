@@ -9,8 +9,8 @@
         public Guid CategoryId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public int ClassSize { get; private set; }
-        public int PlacesAvailable { get; private set; }
+        public int EnrollimentLimit { get; private set; }
+        public int TotalOfEnrolled { get; private set; }
         public decimal Price { get; private set; }
         public string Image { get; private set; }
         public string Video { get; private set; }
@@ -30,7 +30,7 @@
                        Guid categoryId, 
                        string image,
                        string video,
-                       int classSize,
+                       int enrollimentLimit,
                        Period period,
                        Specification specification)
         {
@@ -41,7 +41,7 @@
             Price = price;
             Image = image;
             Video = video;
-            ClassSize = classSize;
+            EnrollimentLimit = enrollimentLimit;
             Period = period;
             Specification = specification;
 
@@ -64,21 +64,20 @@
             Description = descricao;
         }
 
-        public void WithdrawStock(int quantidade)
+        public void Enrol()
         {
-            if (quantidade < 0) quantidade *= -1;
-            if (!HasStock(quantidade)) throw new DomainException("Estoque insuficiente");
-            PlacesAvailable -= quantidade;
+            if (!HasVacancy()) throw new DomainException("Curso cheio.");
+            TotalOfEnrolled -= 1;
         }
 
-        public void ChargeStock(int quantidade)
+        public void Disenrol()
         {
-            PlacesAvailable += quantidade;
+            TotalOfEnrolled += 1;
         }
 
-        public bool HasStock(int quantidade)
+        public bool HasVacancy()
         {
-            return PlacesAvailable >= quantidade;
+            return TotalOfEnrolled < EnrollimentLimit;
         }
 
         public void Validate()

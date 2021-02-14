@@ -23,10 +23,10 @@ namespace DevStore.WebApp.MVC.Setup
             // Catalog
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<ICourseAppService, CourseAppService>();
-            services.AddScoped<IStockService, StockService>();
+            services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<CatalogContext>();
 
-            services.AddScoped<INotificationHandler<LowStockCourseEvent>, CourseEventHandler>();
+            services.AddScoped<INotificationHandler<AlmostFullCourseEvent>, CourseEventHandler>();
 
 
             //Sales
@@ -35,6 +35,8 @@ namespace DevStore.WebApp.MVC.Setup
             services.AddScoped<SalesContext>();
 
             services.AddScoped<IRequestHandler<AddOrderItemCommand, bool>, OrderCommandHandler>();
+            services.AddScoped<IRequestHandler<RemoveOrderItemCommand, bool>, OrderCommandHandler>();
+            
         }
     }
 }
