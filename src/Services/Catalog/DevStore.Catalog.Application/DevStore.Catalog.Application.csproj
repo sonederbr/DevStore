@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="automapper" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\DevStore.Core\DevStore.Core.csproj" />
+    <ProjectReference Include="..\DevStore.Catalog.Data\DevStore.Catalog.Data.csproj" />
+    <ProjectReference Include="..\DevStore.Catalog.Domain\DevStore.Catalog.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

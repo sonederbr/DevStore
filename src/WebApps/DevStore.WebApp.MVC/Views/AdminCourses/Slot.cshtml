@@ -1,0 +1,32 @@
+﻿@model DevStore.Catalog.Application.Dtos.CourseDto
+@{
+    ViewData["Title"] = "Edit course";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-4 item-photo">
+            <img width="400" height="400" src="~/Images/@Model.Image" />
+        </div>
+        <div class="col-xs-5" style="border:20px solid white">
+            <h3>@Model.Name</h3>
+
+            <h6 class="title-price"><small>Buy now</small></h6>
+            <h3 style="margin-top:0px;">@Model.Price.ToString("C")</h3>
+
+            <p>Just @Model.PlacesAvailable slots!</p>
+            <p>@Model.Description</p>
+
+            <div class="section" style="padding-bottom:20px;">
+                <form method="post" asp-controller="AdminCourses" asp-action="UpdateSlot">
+                    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                    <input type="text" id="quantidade" name="quantidade" />
+                    <button class="btn btn-info">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
