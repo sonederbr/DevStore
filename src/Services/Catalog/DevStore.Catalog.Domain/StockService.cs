@@ -8,10 +8,10 @@ namespace DevStore.Catalog.Domain
     public class StockService : IStockService
     {
         private readonly ICourseRepository _productRepository;
-        private readonly IMediatrHandler _bus;
+        private readonly IMediatorHandler _bus;
 
         public StockService(ICourseRepository productRepository, 
-                            IMediatrHandler bus)
+                            IMediatorHandler bus)
         {
             _productRepository = productRepository;
             _bus = bus;
