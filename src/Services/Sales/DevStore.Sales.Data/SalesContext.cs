@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using DevStore.Communication.Mediator;
 using DevStore.Core.Data;
 using DevStore.Core.Messages;
 using DevStore.Sales.Domain;
@@ -12,9 +13,12 @@ namespace DevStore.Catalog.Data
 {
     public class SalesContext : DbContext, IUnitOfWork
     {
-        public SalesContext(DbContextOptions<SalesContext> options)
+        private readonly IMediatorHandler _mediatorHandler;
+        public SalesContext(DbContextOptions<SalesContext> options,
+                            IMediatorHandler mediatorHandler)
             : base(options)
         {
+            _mediatorHandler = mediatorHandler;
             // System.Diagnostics.Debugger.Launch(); 
         }
 
@@ -74,7 +78,11 @@ namespace DevStore.Catalog.Data
                 }
             }
 
-            return await base.SaveChangesAsync() > 0;
+            if (await base.SaveChangesAsync() <= 0) return false;
+
+            await _mediatorHandler.PublishEvents(this);
+
+            return true;
         }
     }
 }

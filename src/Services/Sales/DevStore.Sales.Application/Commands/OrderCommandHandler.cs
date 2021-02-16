@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DevStore.Communication.Mediator;
 using DevStore.Core.Messages;
 using DevStore.Core.Messages.CommonMessages.Notifications;
+using DevStore.Sales.Application.Events;
 using DevStore.Sales.Domain;
 
 using MediatR;
@@ -13,7 +14,8 @@ namespace DevStore.Sales.Application.Commands
 {
     public class OrderCommandHandler :
         IRequestHandler<AddOrderItemCommand, bool>,
-        IRequestHandler<RemoveOrderItemCommand, bool>
+        IRequestHandler<RemoveOrderItemCommand, bool>,
+        IRequestHandler<ApplyVoucherOrderCommand, bool>
 
     {
         private readonly IOrderRepository _orderRepository;
@@ -39,6 +41,8 @@ namespace DevStore.Sales.Application.Commands
                 order.AddItem(orderItem);
 
                 _orderRepository.Add(order);
+
+                order.AddEvent(new OrderDraftStartedEvent(order.Id, message.CourseId, message.CourseName, message.ClientId));
             }
             else
             {
@@ -53,7 +57,11 @@ namespace DevStore.Sales.Application.Commands
                 {
                     _orderRepository.AddItem(orderItem);
                 }
+
+                order.AddEvent(new OrderItemAddedEvent(order.Id, message.CourseId, message.CourseName, message.ClientId));
             }
+
+            order.AddEvent(new OrderUpdatedEvent(order.Id,message.ClientId, order.TotalValue));
 
             return await _orderRepository.UnitOfWork.Commit();
         }
@@ -79,11 +87,61 @@ namespace DevStore.Sales.Application.Commands
             }
 
             order.RemoveItem(orderItem);
-            //pedido.AdicionarEvento(new PedidoAtualizadoEvent(pedido.ClienteId, pedido.Id, pedido.ValorTotal));
-            //pedido.AdicionarEvento(new PedidoProdutoRemovidoEvent(message.ClienteId, pedido.Id, message.ProdutoId));
 
             _orderRepository.RemoveItem(orderItem);
             _orderRepository.Update(order);
+
+            order.AddEvent(new OrderItemRemovedEvent(order.Id, message.CourseId, orderItem.CourseName, message.ClientId));
+            order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
+
+            if (!order.HasItems())
+            {
+                _orderRepository.Remove(order);
+
+                order.AddEvent(new OrderEmptyRemovedEvent(order.Id, message.ClientId));
+            }
+
+            //O change tracker está ativo e a Order está sendo atualizada uam vez q a entidade foi recuperada e alterada.
+            return await _orderRepository.UnitOfWork.Commit();
+        }
+
+        public async Task<bool> Handle(ApplyVoucherOrderCommand message, CancellationToken cancellationToken)
+        {
+            if (!IsValid(message)) return false;
+
+            var order = await _orderRepository.GetDraftOrderByClientId(message.ClientId);
+
+            if (order == null)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, "Pedido não encontrado!"));
+                return false;
+            }
+
+            var voucher = await _orderRepository.GetVoucherByCode(message.VoucherCode);
+
+            if (voucher == null)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, "Voucher não encontrado!"));
+                return false;
+            }
+
+            var voucherApplied = order.ApplyVoucher(voucher);
+            if (!voucherApplied.IsValid)
+            {
+                foreach (var error in voucherApplied.Errors)
+                {
+                    await _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, error.ErrorMessage));
+                }
+
+                return false;
+            }
+
+            //Atualizar voucher como utilizado??? Aqui ou ao finalizar
+
+            _orderRepository.Update(order);
+
+            order.AddEvent(new OrderVoucherAppliedEvent(order.Id, message.ClientId, order.TotalValue));
+            order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
 
             return await _orderRepository.UnitOfWork.Commit();
         }

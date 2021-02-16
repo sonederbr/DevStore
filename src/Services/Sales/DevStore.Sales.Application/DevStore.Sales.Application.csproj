@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Core\DevStore.Core\DevStore.Core.csproj" />
     <ProjectReference Include="..\DevStore.Sales.Data\DevStore.Sales.Data.csproj" />
     <ProjectReference Include="..\DevStore.Sales.Domain\DevStore.Sales.Domain.csproj" />
