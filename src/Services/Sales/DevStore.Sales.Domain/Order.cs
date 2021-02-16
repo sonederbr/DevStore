@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
-using DevStore.Core.DomainObjects;
+using DevStore.Core.Messages.CommonMessages.DomainEvents;
 
 namespace DevStore.Sales.Domain
 {

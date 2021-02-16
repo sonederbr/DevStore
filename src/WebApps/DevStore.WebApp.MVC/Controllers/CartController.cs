@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 
 using DevStore.Catalog.Application.Services;
-using DevStore.Core.Bus;
+using DevStore.Communication.Mediator;
+using DevStore.Core.Messages.CommonMessages.Notifications;
 using DevStore.Sales.Application.Commands;
 using DevStore.Sales.Application.Queries;
-using DevStore.WebApp.MVC.Controllers;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +21,8 @@ namespace DevStore.WebApp.MVC.Controllers
 
         public CartController(ICourseAppService courseAppService,
                               IOrderQueries orderQueries,
-                              IMediatorHandler mediatorHandler) : base(mediatorHandler)
+                              INotificationHandler<DomainNotification> notifications,
+                              IMediatorHandler mediatorHandler) : base(notifications, mediatorHandler)
         {
             _courseAppService = courseAppService;
             _orderQueries = orderQueries;
@@ -41,7 +44,13 @@ namespace DevStore.WebApp.MVC.Controllers
 
             var command = new AddOrderItemCommand(ClientId, course.Id, course.Name, course.Price);
             await _mediatorHandler.SendCommand(command);
-                       
+
+            if (IsValidOperation())
+            {
+                return RedirectToAction("Index");
+            }
+
+            TempData["Errors"] = this.GetErrors();
             return RedirectToAction("CourseDetail", "ShowRoom", new { id });
         }
 

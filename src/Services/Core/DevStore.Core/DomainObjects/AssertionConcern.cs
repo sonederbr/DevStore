@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace DevStore.Core.DomainObjects
+namespace DevStore.Core.Messages.CommonMessages.DomainEvents
 {
     public class AssertionConcern
     {

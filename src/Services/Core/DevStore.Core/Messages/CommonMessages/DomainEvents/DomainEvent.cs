@@ -1,7 +1,7 @@
 ﻿using System;
 using DevStore.Core.Messages;
 
-namespace DevStore.Core.DomainObjects
+namespace DevStore.Core.Messages.CommonMessages.DomainEvents
 {
     public class DomainEvent : Event
     {

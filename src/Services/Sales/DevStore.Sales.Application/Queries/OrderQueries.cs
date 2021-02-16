@@ -60,14 +60,14 @@ namespace DevStore.Sales.Application.Queries
 
             var ordersDto = new List<OrderDto>();
 
-            foreach (var pedido in orders)
+            foreach (var order in orders)
             {
                 ordersDto.Add(new OrderDto
                 {
-                    Total = pedido.TotalValue,
-                    OrderStatus = (int)pedido.OrderStatus,
-                    Code = pedido.Code,
-                    CreatedDate = pedido.CreatedDate
+                    Total = order.TotalValue,
+                    OrderStatus = (int)order.OrderStatus,
+                    Code = order.Code,
+                    CreatedDate = order.CreatedDate
                 });
             }
 

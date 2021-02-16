@@ -2,7 +2,7 @@
 {
     using System;
 
-    using DevStore.Core.DomainObjects;
+    using DevStore.Core.Messages.CommonMessages.DomainEvents;
 
     public class Course : Entity, IAggregateRoot
     {

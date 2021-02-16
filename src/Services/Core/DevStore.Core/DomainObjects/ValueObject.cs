@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace DevStore.Core.DomainObjects
+namespace DevStore.Core.Messages.CommonMessages.DomainEvents
 {
     public abstract class ValueObject
     {

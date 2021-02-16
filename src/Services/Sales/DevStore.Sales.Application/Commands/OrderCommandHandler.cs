@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using DevStore.Communication.Mediator;
 using DevStore.Core.Messages;
+using DevStore.Core.Messages.CommonMessages.Notifications;
 using DevStore.Sales.Domain;
 
 using MediatR;
@@ -15,10 +17,13 @@ namespace DevStore.Sales.Application.Commands
 
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IMediatorHandler _mediatorHandler;
 
-        public OrderCommandHandler(IOrderRepository orderRepository)
+        public OrderCommandHandler(IOrderRepository orderRepository, 
+                                   IMediatorHandler mediatorHandler)
         {
             _orderRepository = orderRepository;
+            _mediatorHandler = mediatorHandler;
         }
 
         public async Task<bool> Handle(AddOrderItemCommand message, CancellationToken cancellationToken)
@@ -57,28 +62,28 @@ namespace DevStore.Sales.Application.Commands
         {
             if (!IsValid(message)) return false;
 
-            var pedido = await _orderRepository.GetDraftOrderByClientId(message.ClientId);
+            var order = await _orderRepository.GetDraftOrderByClientId(message.ClientId);
 
-            if (pedido == null)
+            if (order == null)
             {
                 //await _mediatorHandler.PublicarNotificacao(new DomainNotification("pedido", "Pedido não encontrado!"));
                 return false;
             }
 
-            var pedidoItem = await _orderRepository.GetItemByOrderId(pedido.Id, message.CourseId);
+            var orderItem = await _orderRepository.GetItemByOrderId(order.Id, message.CourseId);
 
-            if (pedidoItem != null && !pedido.HasOrderItem(pedidoItem))
+            if (orderItem != null && !order.HasOrderItem(orderItem))
             {
                 //await _mediatorHandler.PublicarNotificacao(new DomainNotification("pedido", "Item do pedido não encontrado!"));
                 return false;
             }
 
-            pedido.RemoveItem(pedidoItem);
+            order.RemoveItem(orderItem);
             //pedido.AdicionarEvento(new PedidoAtualizadoEvent(pedido.ClienteId, pedido.Id, pedido.ValorTotal));
             //pedido.AdicionarEvento(new PedidoProdutoRemovidoEvent(message.ClienteId, pedido.Id, message.ProdutoId));
 
-            _orderRepository.RemoveItem(pedidoItem);
-            _orderRepository.Update(pedido);
+            _orderRepository.RemoveItem(orderItem);
+            _orderRepository.Update(order);
 
             return await _orderRepository.UnitOfWork.Commit();
         }
@@ -89,7 +94,7 @@ namespace DevStore.Sales.Application.Commands
 
             foreach (var error in message.ValidationResult.Errors)
             {
-                //TODO: Send error event
+                _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, error.ErrorMessage));
             }
 
             return false;

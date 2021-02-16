@@ -6,7 +6,7 @@ using AutoMapper;
 
 using DevStore.Catalog.Application.Dtos;
 using DevStore.Catalog.Domain;
-using DevStore.Core.DomainObjects;
+using DevStore.Core.Messages.CommonMessages.DomainEvents;
 
 namespace DevStore.Catalog.Application.Services
 {

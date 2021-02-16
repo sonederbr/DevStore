@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using DevStore.Core.DomainObjects;
+using DevStore.Core.Messages.CommonMessages.DomainEvents;
 
 namespace DevStore.Catalog.Domain
 {

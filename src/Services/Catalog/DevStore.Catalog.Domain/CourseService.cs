@@ -1,4 +1,4 @@
-﻿using DevStore.Core.Bus;
+﻿using DevStore.Communication.Mediator;
 using System;
 using System.Threading.Tasks;
 using DevStore.Catalog.Domain.Events;
