@@ -88,6 +88,11 @@ namespace DevStore.Sales.Domain
             return _orderItems.Any(p => p.CourseId == item.CourseId);
         }
 
+        public bool HasItems()
+        {
+            return _orderItems.Any();
+        }
+
         public void AddItem(OrderItem item)
         {
             if (!item.IsValid()) return;

@@ -59,6 +59,11 @@ namespace DevStore.Sales.Data.Repository
             _context.Orders.Update(order);
         }
 
+        public void Remove(Order order)
+        {
+            _context.Orders.Remove(order);
+        }
+
         public async Task<OrderItem> GetItemById(Guid id)
         {
             return await _context.OrderItems.FindAsync(id);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using DevStore.Catalog.Domain;
 using DevStore.Core.Data;
+using DevStore.Core.Messages;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,8 @@ namespace DevStore.Catalog.Data
                 if (property.GetColumnType() == null)
                     property.SetColumnType("decimal(18,2)");
             }
+
+            modelBuilder.Ignore<Event>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogContext).Assembly);
 

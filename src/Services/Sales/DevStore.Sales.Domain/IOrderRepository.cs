@@ -13,6 +13,7 @@ namespace DevStore.Sales.Domain
         Task<Order> GetDraftOrderByClientId(Guid clientId);
         void Add(Order order);
         void Update(Order order);
+        void Remove(Order order);
 
         Task<OrderItem> GetItemById(Guid id);
         Task<OrderItem> GetItemByOrderId(Guid orderId, Guid courseId);
