@@ -5,11 +5,12 @@ using DevStore.Catalog.Data;
 using DevStore.Catalog.Data.Repository;
 using DevStore.Catalog.Domain;
 using DevStore.Catalog.Domain.Events;
-using DevStore.Core.Bus;
+using DevStore.Communication.Mediator;
 using DevStore.Sales.Application.Commands;
 using DevStore.Sales.Domain;
 using DevStore.Sales.Data.Repository;
 using DevStore.Sales.Application.Queries;
+using DevStore.Core.Messages.CommonMessages.Notifications;
 
 namespace DevStore.WebApp.MVC.Setup
 {
@@ -17,8 +18,11 @@ namespace DevStore.WebApp.MVC.Setup
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            // Domain Bus (Mediator)
+            // Mediator
             services.AddScoped<IMediatorHandler, MediatorHandler>();
+
+            //Notifications
+            services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
 
             // Catalog
             services.AddScoped<ICourseRepository, CourseRepository>();
