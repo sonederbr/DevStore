@@ -1,9 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using DevStore.Communication.Mediator;
+using DevStore.Core.DomainObjects.DTO;
+using DevStore.Core.Extensions;
 using DevStore.Core.Messages;
+using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
 using DevStore.Core.Messages.CommonMessages.Notifications;
 using DevStore.Sales.Application.Events;
 using DevStore.Sales.Domain;
@@ -15,13 +19,14 @@ namespace DevStore.Sales.Application.Commands
     public class OrderCommandHandler :
         IRequestHandler<AddOrderItemCommand, bool>,
         IRequestHandler<RemoveOrderItemCommand, bool>,
-        IRequestHandler<ApplyVoucherOrderCommand, bool>
+        IRequestHandler<ApplyVoucherOrderCommand, bool>,
+        IRequestHandler<StartOrderCommand, bool>
 
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMediatorHandler _mediatorHandler;
 
-        public OrderCommandHandler(IOrderRepository orderRepository, 
+        public OrderCommandHandler(IOrderRepository orderRepository,
                                    IMediatorHandler mediatorHandler)
         {
             _orderRepository = orderRepository;
@@ -61,7 +66,7 @@ namespace DevStore.Sales.Application.Commands
                 order.AddEvent(new OrderItemAddedEvent(order.Id, message.CourseId, message.CourseName, message.ClientId));
             }
 
-            order.AddEvent(new OrderUpdatedEvent(order.Id,message.ClientId, order.TotalValue));
+            order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
 
             return await _orderRepository.UnitOfWork.Commit();
         }
@@ -142,6 +147,31 @@ namespace DevStore.Sales.Application.Commands
 
             order.AddEvent(new OrderVoucherAppliedEvent(order.Id, message.ClientId, order.TotalValue));
             order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
+
+            return await _orderRepository.UnitOfWork.Commit();
+        }
+
+        public async Task<bool> Handle(StartOrderCommand message, CancellationToken cancellationToken)
+        {
+            if (!IsValid(message)) return false;
+
+            var order = await _orderRepository.GetDraftOrderByClientId(message.ClientId);
+
+            if (order == null)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, "Pedido não encontrado!"));
+                return false;
+            }
+
+            order.StartOrder();
+
+            var listOfItemDto = new List<ItemDto>();
+            order.OrderItems.ForEach(p => listOfItemDto.Add(new ItemDto { CourseId = p.CourseId }));
+            var coursesOrder = new CoursesOrderDto { OrderId = order.Id, Items = listOfItemDto };
+
+            order.AddEvent(new OrderStartedEvent(order.Id, order.ClientId, order.TotalValue, coursesOrder, message.NameCard, message.NumberCard, message.ExpirationDateCard, message.CvvCard));
+
+            _orderRepository.Update(order);
 
             return await _orderRepository.UnitOfWork.Commit();
         }
