@@ -5,27 +5,24 @@ using System.Threading.Tasks;
 using DevStore.Communication.Mediator;
 using DevStore.Core.Data;
 using DevStore.Core.Messages;
-using DevStore.Sales.Domain;
+using DevStore.Finance.Business;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace DevStore.Sales.Data
+namespace DevStore.Finance.Data
 {
-    public class SalesContext : DbContext, IUnitOfWork
+    public class FinanceContext : DbContext, IUnitOfWork
     {
         private readonly IMediatorHandler _mediatorHandler;
 
-        public SalesContext(DbContextOptions<SalesContext> options,
-                            IMediatorHandler mediatorHandler)
+        public FinanceContext(DbContextOptions<FinanceContext> options, IMediatorHandler rebusHandler)
             : base(options)
         {
-            _mediatorHandler = mediatorHandler;
-            // System.Diagnostics.Debugger.Launch(); 
+            _mediatorHandler = rebusHandler ?? throw new ArgumentNullException(nameof(rebusHandler));
         }
 
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,11 +40,9 @@ namespace DevStore.Sales.Data
 
             modelBuilder.Ignore<Event>();
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SalesContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(FinanceContext).Assembly);
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
-
-            modelBuilder.HasSequence<int>("MySequence").StartsAt(1000).IncrementsBy(1);
 
             base.OnModelCreating(modelBuilder);
         }

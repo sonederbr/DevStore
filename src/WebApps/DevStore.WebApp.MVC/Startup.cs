@@ -2,6 +2,8 @@ using AutoMapper;
 
 using DevStore.Catalog.Application.AutoMapper;
 using DevStore.Catalog.Data;
+using DevStore.Finance.Data;
+using DevStore.Sales.Data;
 using DevStore.WebApp.MVC.Data;
 using DevStore.WebApp.MVC.Setup;
 
@@ -39,6 +41,9 @@ namespace DevStore.WebApp.MVC
 
             services.AddDbContext<SalesContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<FinanceContext>(options =>
+              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

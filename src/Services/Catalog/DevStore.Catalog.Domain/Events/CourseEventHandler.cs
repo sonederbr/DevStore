@@ -10,7 +10,8 @@ namespace DevStore.Catalog.Domain.Events
 {
     public class CourseEventHandler :
         INotificationHandler<AlmostFullCourseEvent>,
-        INotificationHandler<OrderStartedEvent>
+        INotificationHandler<OrderStartedEvent>,
+        INotificationHandler<OrderCanceledEvent>
     {
         private readonly ICourseRepository _courseRepository;
         private readonly ICourseService _courseService;
@@ -52,6 +53,11 @@ namespace DevStore.Catalog.Domain.Events
             {
                await  _mediatorHandler.PublishEvent(new OrderEnrolledRejectedEvent(message.OrderId, message.ClientId));
             }
+        }
+
+        public async Task Handle(OrderCanceledEvent message, CancellationToken cancellationToken)
+        {
+            await _courseService.DisenrollCourse(message.CoursesOrder);
         }
     }
 }

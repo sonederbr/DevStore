@@ -28,8 +28,8 @@ namespace DevStore.Catalog.Data.Migrations
                     CategoryId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(type: "varchar(250)", nullable: false),
                     Description = table.Column<string>(type: "varchar(500)", nullable: false),
-                    ClassSize = table.Column<int>(nullable: false),
-                    PlacesAvailable = table.Column<int>(nullable: false),
+                    EnrollimentLimit = table.Column<int>(nullable: false),
+                    TotalOfEnrolled = table.Column<int>(nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Image = table.Column<string>(type: "varchar(250)", nullable: false),
                     Video = table.Column<string>(type: "varchar(500)", nullable: false),
@@ -55,22 +55,22 @@ namespace DevStore.Catalog.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { new Guid("60e5157c-be4a-43fc-ae04-165554577076"), 1, "Category 1" });
+                values: new object[] { new Guid("14f864db-935e-4fb1-9312-8d10de05f1c0"), 1, "Category 1" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { new Guid("344723d0-73e8-4908-bbc1-91e973add6b1"), 2, "Category 2" });
+                values: new object[] { new Guid("d48f9583-08c2-4a74-b39c-4327893268a6"), 2, "Category 2" });
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "Id", "CategoryId", "ClassSize", "CreatedDate", "Description", "Enable", "Image", "Name", "PlacesAvailable", "Price", "UpdatedDate", "Video", "EndDate", "StartDate", "NumberOfClasses", "Duration" },
-                values: new object[] { new Guid("88e0b857-1482-43eb-ab85-78aa3fdfd5b1"), new Guid("60e5157c-be4a-43fc-ae04-165554577076"), 10, new DateTime(2021, 2, 14, 15, 3, 46, 829, DateTimeKind.Local).AddTicks(6634), "Description 1", true, "image1.jpg", "Course 1", 10, 10m, null, "video1.mp4", new DateTime(2021, 3, 14, 15, 3, 46, 820, DateTimeKind.Local).AddTicks(5822), new DateTime(2021, 2, 14, 15, 3, 46, 816, DateTimeKind.Local).AddTicks(2557), 10, 100 });
+                columns: new[] { "Id", "CategoryId", "CreatedDate", "Description", "Enable", "EnrollimentLimit", "Image", "Name", "Price", "TotalOfEnrolled", "UpdatedDate", "Video", "EndDate", "StartDate", "NumberOfClasses", "Duration" },
+                values: new object[] { new Guid("6d36cf8f-d367-4cef-83a1-277d9165cc6f"), new Guid("14f864db-935e-4fb1-9312-8d10de05f1c0"), new DateTime(2021, 2, 21, 15, 25, 37, 89, DateTimeKind.Local).AddTicks(1636), "Description 1", true, 10, "image1.jpg", "Course 1", 10m, 0, null, "video1.mp4", new DateTime(2021, 3, 21, 15, 25, 37, 86, DateTimeKind.Local).AddTicks(3237), new DateTime(2021, 2, 21, 15, 25, 37, 80, DateTimeKind.Local).AddTicks(3932), 10, 100 });
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "Id", "CategoryId", "ClassSize", "CreatedDate", "Description", "Enable", "Image", "Name", "PlacesAvailable", "Price", "UpdatedDate", "Video", "EndDate", "StartDate", "NumberOfClasses", "Duration" },
-                values: new object[] { new Guid("b87d1c62-bd7f-4cfe-b20e-60f7b84bbd8f"), new Guid("344723d0-73e8-4908-bbc1-91e973add6b1"), 20, new DateTime(2021, 2, 14, 15, 3, 46, 831, DateTimeKind.Local).AddTicks(3428), "Description 2", true, "image2.jpg", "Course 2", 10, 20m, null, "video1.mp4", new DateTime(2021, 4, 14, 15, 3, 46, 828, DateTimeKind.Local).AddTicks(3980), new DateTime(2021, 2, 14, 15, 3, 46, 828, DateTimeKind.Local).AddTicks(3916), 20, 200 });
+                columns: new[] { "Id", "CategoryId", "CreatedDate", "Description", "Enable", "EnrollimentLimit", "Image", "Name", "Price", "TotalOfEnrolled", "UpdatedDate", "Video", "EndDate", "StartDate", "NumberOfClasses", "Duration" },
+                values: new object[] { new Guid("731b46c1-b3d2-4ac8-9151-32fc58fa3863"), new Guid("d48f9583-08c2-4a74-b39c-4327893268a6"), new DateTime(2021, 2, 21, 15, 25, 37, 92, DateTimeKind.Local).AddTicks(4661), "Description 2", true, 20, "image2.jpg", "Course 2", 20m, 0, null, "video1.mp4", new DateTime(2021, 4, 21, 15, 25, 37, 88, DateTimeKind.Local).AddTicks(328), new DateTime(2021, 2, 21, 15, 25, 37, 88, DateTimeKind.Local).AddTicks(270), 20, 200 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_CategoryId",

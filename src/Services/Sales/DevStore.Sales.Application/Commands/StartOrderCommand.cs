@@ -9,17 +9,18 @@ namespace DevStore.Sales.Application.Commands
     public class StartOrderCommand : Command
     {
         public Guid ClientId { get; private set; }
-        public Guid CourseId { get; private set; }
+        public Guid OrderId { get; private set; }
         public decimal Total { get; private set; }
         public string NameCard { get; private set; }
         public string NumberCard { get; private set; }
         public string ExpirationDateCard { get; private set; }
         public string CvvCard { get; private set; }
 
-        public StartOrderCommand(Guid clientId, Guid courseId, decimal total, string nameCard, string numberCard, string expirationDateCard, string cvvCard)
+        public StartOrderCommand(Guid clientId, Guid orderId, decimal total, string nameCard, string numberCard, string expirationDateCard, string cvvCard)
         {
+            AggregateId = orderId;
             ClientId = clientId;
-            CourseId = courseId;
+            OrderId = orderId;
             Total = total;
             NameCard = nameCard;
             NumberCard = numberCard;
@@ -42,7 +43,7 @@ namespace DevStore.Sales.Application.Commands
                 .NotEqual(Guid.Empty)
                 .WithMessage("Id do cliente inválido");
 
-            RuleFor(c => c.CourseId)
+            RuleFor(c => c.OrderId)
                 .NotEqual(Guid.Empty)
                 .WithMessage("Id do curso inválido");
 

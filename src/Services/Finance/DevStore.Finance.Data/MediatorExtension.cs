@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using DevStore.Communication.Mediator;
 using DevStore.Core.Messages.CommonMessages.DomainEvents;
 
-namespace DevStore.Sales.Data
+namespace DevStore.Finance.Data
 {
     public static class MediatorExtension
     {
-        public static async Task PublishEvents(this IMediatorHandler mediator, SalesContext ctx)
+        public static async Task PublishEvents(this IMediatorHandler mediator, FinanceContext ctx)
         {
             var domainEntities = ctx.ChangeTracker
                 .Entries<Entity>()
