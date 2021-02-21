@@ -13,6 +13,6 @@ namespace DevStore.Sales.Application.Queries.Dtos
         public string VoucherCode { get; set; }
 
         public List<CartItemDto> Items { get; set; } = new List<CartItemDto>();
-        public CartPaymentDto Payment { get; set; }
+        public CardPaymentDto Payment { get; set; }
     }
 }

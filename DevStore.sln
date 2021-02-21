@@ -27,11 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevStore.Core", "src\Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevStore.WebApp.MVC", "src\WebApps\DevStore.WebApp.MVC\DevStore.WebApp.MVC.csproj", "{CB26CF4F-C8B2-46C6-8F8B-1250670B7882}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevStore.Sales.Domain", "src\Services\Sales\DevStore.Sales.Domain\DevStore.Sales.Domain.csproj", "{809085D9-0525-46E6-BA8A-0BBB90A237FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevStore.Sales.Domain", "src\Services\Sales\DevStore.Sales.Domain\DevStore.Sales.Domain.csproj", "{809085D9-0525-46E6-BA8A-0BBB90A237FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevStore.Sales.Data", "src\Services\Sales\DevStore.Sales.Data\DevStore.Sales.Data.csproj", "{D9391B4D-FFEE-4A97-BD19-77AE17FBFC5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevStore.Sales.Data", "src\Services\Sales\DevStore.Sales.Data\DevStore.Sales.Data.csproj", "{D9391B4D-FFEE-4A97-BD19-77AE17FBFC5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevStore.Sales.Application", "src\Services\Sales\DevStore.Sales.Application\DevStore.Sales.Application.csproj", "{6B49454E-5C8F-491B-B198-3F5739625377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevStore.Sales.Application", "src\Services\Sales\DevStore.Sales.Application\DevStore.Sales.Application.csproj", "{6B49454E-5C8F-491B-B198-3F5739625377}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

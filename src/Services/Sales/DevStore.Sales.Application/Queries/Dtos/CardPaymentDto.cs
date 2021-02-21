@@ -1,6 +1,6 @@
 ﻿namespace DevStore.Sales.Application.Queries.Dtos
 {
-    public class CartPaymentDto
+    public class CardPaymentDto
     {
         public string NameCard { get; set; }
         public string NumberCard { get; set; }

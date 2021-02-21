@@ -1,6 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
+using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
+
 using MediatR;
 
 namespace DevStore.Sales.Application.Events
@@ -11,7 +13,8 @@ namespace DevStore.Sales.Application.Events
         INotificationHandler<OrderUpdatedEvent>,
         INotificationHandler<OrderItemRemovedEvent>,
         INotificationHandler<OrderEmptyRemovedEvent>,
-        INotificationHandler<OrderVoucherAppliedEvent>
+        INotificationHandler<OrderVoucherAppliedEvent>,
+        INotificationHandler<OrderEnrolledRejectedEvent>
     {
         public Task Handle(OrderDraftStartedEvent notification, CancellationToken cancellationToken)
         {
@@ -39,6 +42,11 @@ namespace DevStore.Sales.Application.Events
         }
 
         public Task Handle(OrderVoucherAppliedEvent notification, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(OrderEnrolledRejectedEvent notification, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
