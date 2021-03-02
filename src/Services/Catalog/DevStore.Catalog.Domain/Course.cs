@@ -67,12 +67,12 @@
         public void Enrol()
         {
             if (!HasVacancy()) throw new DomainException("Curso cheio.");
-            TotalOfEnrolled -= 1;
+            TotalOfEnrolled += 1;
         }
 
         public void Disenrol()
         {
-            TotalOfEnrolled += 1;
+            TotalOfEnrolled -= 1;
         }
 
         public bool HasVacancy()

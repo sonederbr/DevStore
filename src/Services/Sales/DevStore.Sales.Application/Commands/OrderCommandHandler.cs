@@ -216,7 +216,7 @@ namespace DevStore.Sales.Application.Commands
             order.OrderItems.ForEach(p => listOfItemDto.Add(new ItemDto { CourseId = p.CourseId }));
             var coursesOrder = new CoursesOrderDto { OrderId = order.Id, Items = listOfItemDto };
 
-            order.AddEvent(new OrderCanceledEvent(order.Id, order.ClientId, coursesOrder));
+            order.AddEvent(new OrderCanceledEvent(message.OrderId, message.ClientId, coursesOrder));
 
             return await _orderRepository.UnitOfWork.Commit();
         }

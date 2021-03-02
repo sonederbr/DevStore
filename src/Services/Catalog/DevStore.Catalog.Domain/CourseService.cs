@@ -12,7 +12,7 @@ namespace DevStore.Catalog.Domain
         private readonly IMediatorHandler _mediatorHandler;
 
         public CourseService(ICourseRepository courseRepository, 
-                            IMediatorHandler mediatorHandler)
+                             IMediatorHandler mediatorHandler)
         {
             _courseRepository = courseRepository;
             _mediatorHandler = mediatorHandler;
@@ -24,6 +24,7 @@ namespace DevStore.Catalog.Domain
 
             return await _courseRepository.UnitOfWork.Commit();
         }
+
         public async Task<bool> EnrolCourse(CoursesOrderDto courses)
         {
             foreach (var item in courses.Items)
@@ -37,6 +38,7 @@ namespace DevStore.Catalog.Domain
         public async Task<bool> DisenrollCourse(Guid courseId)
         {
             if (!await IncreaseVacancyInCourse(courseId)) return false;
+
             return await _courseRepository.UnitOfWork.Commit();
         }
 
@@ -61,7 +63,7 @@ namespace DevStore.Catalog.Domain
             course.Enrol();
 
             // TODO: Parametrizar a quantidade de estoque baixo
-            if ((course.TotalOfEnrolled - course.EnrollimentLimit) < 5)
+            if ((course.EnrollimentLimit - course.TotalOfEnrolled) < 5)
             {
                 await _mediatorHandler.PublishEvent(new AlmostFullCourseEvent(course.Id, (course.TotalOfEnrolled - course.EnrollimentLimit)));
             }
