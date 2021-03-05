@@ -39,13 +39,13 @@ namespace DevStore.Catalog.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("14f864db-935e-4fb1-9312-8d10de05f1c0"),
+                            Id = new Guid("21a9c82a-b1cb-410f-acde-3008a6d975a4"),
                             Code = 1,
                             Name = "Category 1"
                         },
                         new
                         {
-                            Id = new Guid("d48f9583-08c2-4a74-b39c-4327893268a6"),
+                            Id = new Guid("6fd53c98-2394-458d-adaa-a3ea7f7fa66c"),
                             Code = 2,
                             Name = "Category 2"
                         });
@@ -103,9 +103,9 @@ namespace DevStore.Catalog.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6d36cf8f-d367-4cef-83a1-277d9165cc6f"),
-                            CategoryId = new Guid("14f864db-935e-4fb1-9312-8d10de05f1c0"),
-                            CreatedDate = new DateTime(2021, 2, 21, 15, 25, 37, 89, DateTimeKind.Local).AddTicks(1636),
+                            Id = new Guid("789290ce-8384-4004-bf6c-8861efbc4875"),
+                            CategoryId = new Guid("21a9c82a-b1cb-410f-acde-3008a6d975a4"),
+                            CreatedDate = new DateTime(2021, 3, 5, 17, 18, 56, 588, DateTimeKind.Local).AddTicks(5225),
                             Description = "Description 1",
                             Enable = true,
                             EnrollimentLimit = 10,
@@ -117,9 +117,9 @@ namespace DevStore.Catalog.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("731b46c1-b3d2-4ac8-9151-32fc58fa3863"),
-                            CategoryId = new Guid("d48f9583-08c2-4a74-b39c-4327893268a6"),
-                            CreatedDate = new DateTime(2021, 2, 21, 15, 25, 37, 92, DateTimeKind.Local).AddTicks(4661),
+                            Id = new Guid("f0a5326c-331d-45f6-be38-69801e9649ab"),
+                            CategoryId = new Guid("6fd53c98-2394-458d-adaa-a3ea7f7fa66c"),
+                            CreatedDate = new DateTime(2021, 3, 5, 17, 18, 56, 590, DateTimeKind.Local).AddTicks(1089),
                             Description = "Description 2",
                             Enable = true,
                             EnrollimentLimit = 20,
@@ -162,15 +162,15 @@ namespace DevStore.Catalog.Data.Migrations
                             b1.HasData(
                                 new
                                 {
-                                    CourseId = new Guid("6d36cf8f-d367-4cef-83a1-277d9165cc6f"),
-                                    EndDate = new DateTime(2021, 3, 21, 15, 25, 37, 86, DateTimeKind.Local).AddTicks(3237),
-                                    StartDate = new DateTime(2021, 2, 21, 15, 25, 37, 80, DateTimeKind.Local).AddTicks(3932)
+                                    CourseId = new Guid("789290ce-8384-4004-bf6c-8861efbc4875"),
+                                    EndDate = new DateTime(2021, 4, 5, 17, 18, 56, 584, DateTimeKind.Local).AddTicks(7801),
+                                    StartDate = new DateTime(2021, 3, 5, 17, 18, 56, 578, DateTimeKind.Local).AddTicks(2984)
                                 },
                                 new
                                 {
-                                    CourseId = new Guid("731b46c1-b3d2-4ac8-9151-32fc58fa3863"),
-                                    EndDate = new DateTime(2021, 4, 21, 15, 25, 37, 88, DateTimeKind.Local).AddTicks(328),
-                                    StartDate = new DateTime(2021, 2, 21, 15, 25, 37, 88, DateTimeKind.Local).AddTicks(270)
+                                    CourseId = new Guid("f0a5326c-331d-45f6-be38-69801e9649ab"),
+                                    EndDate = new DateTime(2021, 5, 5, 17, 18, 56, 587, DateTimeKind.Local).AddTicks(3998),
+                                    StartDate = new DateTime(2021, 3, 5, 17, 18, 56, 587, DateTimeKind.Local).AddTicks(3962)
                                 });
                         });
 
@@ -197,13 +197,13 @@ namespace DevStore.Catalog.Data.Migrations
                             b1.HasData(
                                 new
                                 {
-                                    CourseId = new Guid("6d36cf8f-d367-4cef-83a1-277d9165cc6f"),
+                                    CourseId = new Guid("789290ce-8384-4004-bf6c-8861efbc4875"),
                                     NumberOfClasses = 10,
                                     TotalTime = 100
                                 },
                                 new
                                 {
-                                    CourseId = new Guid("731b46c1-b3d2-4ac8-9151-32fc58fa3863"),
+                                    CourseId = new Guid("f0a5326c-331d-45f6-be38-69801e9649ab"),
                                     NumberOfClasses = 20,
                                     TotalTime = 200
                                 });
