@@ -19,6 +19,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\EventSourcing\EventSourcing.csproj" />
     <ProjectReference Include="..\..\Services\Catalog\DevStore.Catalog.Application\DevStore.Catalog.Application.csproj" />
     <ProjectReference Include="..\..\Services\Catalog\DevStore.Catalog.Data\DevStore.Catalog.Data.csproj" />
     <ProjectReference Include="..\..\Services\Core\DevStore.Core\DevStore.Core.csproj" />

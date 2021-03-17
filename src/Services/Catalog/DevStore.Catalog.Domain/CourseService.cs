@@ -65,7 +65,7 @@ namespace DevStore.Catalog.Domain
             // TODO: Parametrizar a quantidade de estoque baixo
             if ((course.EnrollimentLimit - course.TotalOfEnrolled) < 5)
             {
-                await _mediatorHandler.PublishEvent(new AlmostFullCourseEvent(course.Id, (course.TotalOfEnrolled - course.EnrollimentLimit)));
+                await _mediatorHandler.PublishDomainEvent(new AlmostFullCourseEvent(course.Id, (course.TotalOfEnrolled - course.EnrollimentLimit)));
             }
 
             _courseRepository.Update(course);

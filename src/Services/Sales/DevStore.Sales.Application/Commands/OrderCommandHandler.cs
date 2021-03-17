@@ -66,7 +66,7 @@ namespace DevStore.Sales.Application.Commands
                     _orderRepository.AddItem(orderItem);
                 }
 
-                order.AddEvent(new OrderItemAddedEvent(order.Id, message.CourseId, message.CourseName, message.ClientId));
+                // order.AddEvent(new OrderItemAddedEvent(order.Id, message.CourseId, message.CourseName, message.ClientId));
             }
 
             order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
@@ -100,7 +100,7 @@ namespace DevStore.Sales.Application.Commands
             _orderRepository.Update(order);
 
             order.AddEvent(new OrderItemRemovedEvent(order.Id, message.CourseId, orderItem.CourseName, message.ClientId));
-            order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
+            // order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
 
             if (!order.HasItems())
             {

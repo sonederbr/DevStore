@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DevStore.Sales.Application.Queries.Dtos.OrderDto>
+@{
+    ViewData["Title"] = "My orders";
+}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <h4>My Orders</h4>
+            <hr>
+            <h5>Check your orders</h5>
+
+            @{
+                if (Model.Any())
+                {
+                    <br><br>
+                    <div class="table-responsive-sm">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Order</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Value</th>
+                                    <th scope="col">History</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var order in Model)
+                                    {
+                                        <tr>
+                                            <td>@order.Code</td>
+                                            <td>@order.CreatedDate.ToShortDateString()</td>
+                                            <td>
+                                                <h4>
+
+                                                    @{
+                                                        if (order.OrderStatus == 4)
+                                                        {
+                                                            <span class="badge badge-success">
+                                                                Paid
+                                                            </span>
+                                                        }
+                                                        else if (order.OrderStatus == 6)
+                                                        {
+                                                            <span class="badge badge-danger">
+                                                                Canceled
+                                                            </span>
+                                                        }
+                                                    }
+
+                                                </h4>
+                                            </td>
+                                            <td>@order.Total.ToString("C")</td>
+                                            <td><a class="btn btn-info" asp-controller="Events" asp-action="Index" asp-route-id="@order.Id"><span class="far fa-clock"></span></a></td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p>N/A</p>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+

@@ -4,6 +4,7 @@ using DevStore.Catalog.Data.Repository;
 using DevStore.Catalog.Domain;
 using DevStore.Catalog.Domain.Events;
 using DevStore.Communication.Mediator;
+using DevStore.Core.Data.EventSourcing;
 using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
 using DevStore.Core.Messages.CommonMessages.Notifications;
 using DevStore.Finance.AntiCorruption;
@@ -12,6 +13,8 @@ using DevStore.Sales.Application.Commands;
 using DevStore.Sales.Application.Events;
 using DevStore.Sales.Application.Queries;
 using DevStore.Sales.Data;
+
+using EventSourcing;
 
 using MediatR;
 
@@ -33,6 +36,10 @@ namespace DevStore.WebApp.MVC.Setup
 
             // Notifications
             services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
+
+            // Event Sourcing
+            services.AddSingleton<IEventStoreService, EventStoreService>();
+            services.AddSingleton<IEventSourcingRepository, EventSourcingRepository>();
 
             // Catalog
             services.AddScoped<ICourseRepository, CourseRepository>();
