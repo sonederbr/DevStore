@@ -210,13 +210,12 @@ namespace DevStore.Sales.Application.Commands
                 return false;
             }
 
-            order.MakeDraft();
-
             var listOfItemDto = new List<ItemDto>();
             order.OrderItems.ForEach(p => listOfItemDto.Add(new ItemDto { CourseId = p.CourseId }));
             var coursesOrder = new CoursesOrderDto { OrderId = order.Id, Items = listOfItemDto };
 
             order.AddEvent(new OrderCanceledEvent(message.OrderId, message.ClientId, coursesOrder));
+            order.MakeDraft();
 
             return await _orderRepository.UnitOfWork.Commit();
         }

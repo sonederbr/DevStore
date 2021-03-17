@@ -92,6 +92,8 @@ namespace DevStore.WebApp.MVC.Controllers
         public async Task<IActionResult> OrderSummary()
         {
             var cartDto = await _orderQueries.GetCartByClient(ClientId);
+
+            // TODO: Remove after dev test
             cartDto.Payment = new CardPaymentDto
             {
                 NameCard = "Ederson Lima",
@@ -118,7 +120,10 @@ namespace DevStore.WebApp.MVC.Controllers
                 return RedirectToAction("Index", "Order");
             }
 
-            return View("OrderSummary", await _orderQueries.GetCartByClient(ClientId));
+            // TODO: Remove after dev test
+            cart.Payment = cartDto.Payment;
+            
+            return View("OrderSummary", cart);
         }
     }
 }

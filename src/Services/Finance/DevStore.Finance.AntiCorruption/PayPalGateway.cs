@@ -7,8 +7,7 @@ namespace DevStore.Finance.AntiCorruption
     {
         public bool CommitTransaction(string cardHashKey, string orderId, decimal amount)
         {
-            //return new Random().Next(2) == 0;
-            return false;
+            return new Random().Next(2) == 0;
         }
 
         public string GetCardHashKey(string serviceKey, string cartaoCredito)
