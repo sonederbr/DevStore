@@ -12,7 +12,7 @@ namespace DevStore.Catalog.Domain
         private readonly IMediatorHandler _mediatorHandler;
 
         public CourseService(ICourseRepository courseRepository, 
-                             IMediatorHandler mediatorHandler)
+                            IMediatorHandler mediatorHandler)
         {
             _courseRepository = courseRepository;
             _mediatorHandler = mediatorHandler;
