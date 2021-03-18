@@ -13,6 +13,7 @@ namespace DevStore.Sales.Application.Commands
 
         public RemoveOrderItemCommand(Guid clientId, Guid courseId)
         {
+            AggregateId = courseId;
             ClientId = clientId;
             CourseId = courseId;
         }

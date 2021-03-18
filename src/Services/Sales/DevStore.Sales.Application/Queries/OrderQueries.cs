@@ -64,6 +64,7 @@ namespace DevStore.Sales.Application.Queries
             {
                 ordersDto.Add(new OrderDto
                 {
+                    Id = order.Id,
                     Total = order.TotalValue,
                     OrderStatus = (int)order.OrderStatus,
                     Code = order.Code,

@@ -10,7 +10,7 @@
     <div class="row">
 
         @{
-            if (Model.Items.Any())
+            if (Model != null || Model.Items?.Any() == true)
             {
                 <div class="col-md-4 order-md-2 mb-4">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -62,22 +62,22 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label>Nome no Cartão</label>
-                                <input asp-for="Payment.NameCard" type="text" class="form-control" placeholder="" required="">
+                                <input asp-for="Payment.NameCard" type="text" value="@Model.Payment?.NameCard" class="form-control" placeholder="" required="">
                                 <small class="text-muted">Nome completo como consta no cartão</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label>Número do Cartão</label>
-                                <input asp-for="Payment.NumberCard" type="text" class="form-control" placeholder="" required="">
+                                <input asp-for="Payment.NumberCard" type="text" value="@Model.Payment?.NumberCard" class="form-control" placeholder="" required="">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <label>Data Expiração</label>
-                                <input asp-for="Payment.ExpirationDateCard" type="text" class="form-control" placeholder="" required="">
+                                <input asp-for="Payment.ExpirationDateCard" value="@Model.Payment?.ExpirationDateCard" type="text" class="form-control" placeholder="" required="">
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label>CVV</label>
-                                <input asp-for="Payment.CvvCard" type="text" class="form-control" placeholder="" required="">
+                                <input asp-for="Payment.CvvCard" type="text" value="@Model.Payment?.CvvCard" class="form-control" placeholder="" required="">
                             </div>
                         </div>
                         <hr class="mb-4">

@@ -26,7 +26,8 @@ namespace DevStore.Catalog.Data.Repository
 
         public async Task<Course> GetById(Guid id)
         {
-            return await _context.Courses.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            // return await _context.Courses.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Courses.FindAsync(id);
         }
 
         public async Task<IEnumerable<Course>> GetByCategory(int code)

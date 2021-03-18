@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DevStore.Communication.Mediator;
 using DevStore.Core.Messages.CommonMessages.DomainEvents;
 
-namespace DevStore.Catalog.Data
+namespace DevStore.Sales.Data
 {
     public static class MediatorExtension
     {

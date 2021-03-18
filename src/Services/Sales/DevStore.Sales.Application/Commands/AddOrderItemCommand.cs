@@ -15,6 +15,7 @@ namespace DevStore.Sales.Application.Commands
 
         public AddOrderItemCommand(Guid clientId, Guid courseId, string courseName, decimal price)
         {
+            AggregateId = courseId;
             ClientId = clientId;
             CourseId = courseId;
             CourseName = courseName;

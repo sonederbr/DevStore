@@ -20,7 +20,10 @@ namespace DevStore.Sales.Application.Commands
         IRequestHandler<AddOrderItemCommand, bool>,
         IRequestHandler<RemoveOrderItemCommand, bool>,
         IRequestHandler<ApplyVoucherOrderCommand, bool>,
-        IRequestHandler<StartOrderCommand, bool>
+        IRequestHandler<StartOrderCommand, bool>,
+        IRequestHandler<FinishOrderCommand, bool>,
+        IRequestHandler<CancelOrderAndDisrollFromCourseCommand, bool>,
+        IRequestHandler<CancelOrderCommand, bool>
 
     {
         private readonly IOrderRepository _orderRepository;
@@ -63,7 +66,7 @@ namespace DevStore.Sales.Application.Commands
                     _orderRepository.AddItem(orderItem);
                 }
 
-                order.AddEvent(new OrderItemAddedEvent(order.Id, message.CourseId, message.CourseName, message.ClientId));
+                // order.AddEvent(new OrderItemAddedEvent(order.Id, message.CourseId, message.CourseName, message.ClientId));
             }
 
             order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
@@ -97,7 +100,7 @@ namespace DevStore.Sales.Application.Commands
             _orderRepository.Update(order);
 
             order.AddEvent(new OrderItemRemovedEvent(order.Id, message.CourseId, orderItem.CourseName, message.ClientId));
-            order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
+            // order.AddEvent(new OrderUpdatedEvent(order.Id, message.ClientId, order.TotalValue));
 
             if (!order.HasItems())
             {
@@ -172,6 +175,64 @@ namespace DevStore.Sales.Application.Commands
             order.AddEvent(new OrderStartedEvent(order.Id, order.ClientId, order.TotalValue, coursesOrder, message.NameCard, message.NumberCard, message.ExpirationDateCard, message.CvvCard));
 
             _orderRepository.Update(order);
+
+            return await _orderRepository.UnitOfWork.Commit();
+        }
+
+        public async Task<bool> Handle(FinishOrderCommand message, CancellationToken cancellationToken)
+        {
+            if (!IsValid(message)) return false;
+
+            var order = await _orderRepository.GetById(message.OrderId);
+
+            if (order == null)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, "Pedido não encontrado!"));
+                return false;
+            }
+
+            order.FinishOrder();
+
+            order.AddEvent(new OrderFinishedEvent(order.Id));
+
+            return await _orderRepository.UnitOfWork.Commit();
+        }
+
+        public async Task<bool> Handle(CancelOrderAndDisrollFromCourseCommand message, CancellationToken cancellationToken)
+        {
+            if (!IsValid(message)) return false;
+
+            var order = await _orderRepository.GetById(message.OrderId);
+
+            if (order == null)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, "Pedido não encontrado!"));
+                return false;
+            }
+
+            var listOfItemDto = new List<ItemDto>();
+            order.OrderItems.ForEach(p => listOfItemDto.Add(new ItemDto { CourseId = p.CourseId }));
+            var coursesOrder = new CoursesOrderDto { OrderId = order.Id, Items = listOfItemDto };
+
+            order.AddEvent(new OrderCanceledEvent(message.OrderId, message.ClientId, coursesOrder));
+            order.MakeDraft();
+
+            return await _orderRepository.UnitOfWork.Commit();
+        }
+
+        public async Task<bool> Handle(CancelOrderCommand message, CancellationToken cancellationToken)
+        {
+            if (!IsValid(message)) return false;
+
+            var order = await _orderRepository.GetById(message.OrderId);
+
+            if (order == null)
+            {
+                await _mediatorHandler.PublishNotification(new DomainNotification(message.MessageType, "Pedido não encontrado!"));
+                return false;
+            }
+
+            order.MakeDraft();
 
             return await _orderRepository.UnitOfWork.Commit();
         }

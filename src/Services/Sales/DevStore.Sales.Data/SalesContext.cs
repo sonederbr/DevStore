@@ -9,11 +9,12 @@ using DevStore.Sales.Domain;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace DevStore.Catalog.Data
+namespace DevStore.Sales.Data
 {
     public class SalesContext : DbContext, IUnitOfWork
     {
         private readonly IMediatorHandler _mediatorHandler;
+
         public SalesContext(DbContextOptions<SalesContext> options,
                             IMediatorHandler mediatorHandler)
             : base(options)
@@ -47,6 +48,7 @@ namespace DevStore.Catalog.Data
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
             modelBuilder.HasSequence<int>("MySequence").StartsAt(1000).IncrementsBy(1);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -78,11 +80,10 @@ namespace DevStore.Catalog.Data
                 }
             }
 
-            if (await base.SaveChangesAsync() <= 0) return false;
+            var sucess = await base.SaveChangesAsync() > 0;
+            if (sucess) await _mediatorHandler.PublishEvents(this);
 
-            await _mediatorHandler.PublishEvents(this);
-
-            return true;
+            return sucess;
         }
     }
 }

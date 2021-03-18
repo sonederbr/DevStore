@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
+using DevStore.Communication.Mediator;
 using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
+using DevStore.Sales.Application.Commands;
 
 using MediatR;
 
@@ -14,39 +16,65 @@ namespace DevStore.Sales.Application.Events
         INotificationHandler<OrderItemRemovedEvent>,
         INotificationHandler<OrderEmptyRemovedEvent>,
         INotificationHandler<OrderVoucherAppliedEvent>,
-        INotificationHandler<OrderEnrolledRejectedEvent>
+        INotificationHandler<OrderEnrolledRejectedEvent>,
+        INotificationHandler<PaymentRealizedEvent>,
+        INotificationHandler<PaymentRefusedEvent>,
+        INotificationHandler<OrderFinishedEvent>
     {
-        public Task Handle(OrderDraftStartedEvent notification, CancellationToken cancellationToken)
+
+        private readonly IMediatorHandler _mediatorHandler;
+
+        public OrderEventHandler(IMediatorHandler mediatorHandler)
+        {
+            _mediatorHandler = mediatorHandler;
+        }
+
+        public Task Handle(OrderDraftStartedEvent message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public Task Handle(OrderItemAddedEvent notification, CancellationToken cancellationToken)
+        public Task Handle(OrderItemAddedEvent message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public Task Handle(OrderUpdatedEvent notification, CancellationToken cancellationToken)
+        public Task Handle(OrderUpdatedEvent message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public Task Handle(OrderItemRemovedEvent notification, CancellationToken cancellationToken)
+        public Task Handle(OrderItemRemovedEvent message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public Task Handle(OrderEmptyRemovedEvent notification, CancellationToken cancellationToken)
+        public Task Handle(OrderEmptyRemovedEvent message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public Task Handle(OrderVoucherAppliedEvent notification, CancellationToken cancellationToken)
+        public Task Handle(OrderVoucherAppliedEvent message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public Task Handle(OrderEnrolledRejectedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(OrderEnrolledRejectedEvent message, CancellationToken cancellationToken)
+        {
+            await _mediatorHandler.SendCommand(new CancelOrderCommand(message.OrderId, message.ClientId));
+        }
+
+        public async Task Handle(PaymentRealizedEvent message, CancellationToken cancellationToken)
+        {
+            await _mediatorHandler.SendCommand(new FinishOrderCommand(message.OrderId, message.ClientId));
+        }
+
+        public async Task Handle(PaymentRefusedEvent message, CancellationToken cancellationToken)
+        {
+            await _mediatorHandler.SendCommand(new CancelOrderAndDisrollFromCourseCommand(message.OrderId, message.ClientId));
+        }
+
+        public Task Handle(OrderFinishedEvent message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

@@ -66,8 +66,7 @@ namespace DevStore.Sales.Data.Migrations
                     OrderId = table.Column<Guid>(nullable: false),
                     CourseId = table.Column<Guid>(nullable: false),
                     CourseName = table.Column<string>(type: "varchar(250)", nullable: false),
-                    Quantity = table.Column<int>(nullable: false),
-                    ItemValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {

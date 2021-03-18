@@ -91,7 +91,17 @@ namespace DevStore.WebApp.MVC.Controllers
         [Route("order-summary")]
         public async Task<IActionResult> OrderSummary()
         {
-            return View(await _orderQueries.GetCartByClient(ClientId));
+            var cartDto = await _orderQueries.GetCartByClient(ClientId);
+
+            // TODO: Remove after dev test
+            cartDto.Payment = new CardPaymentDto
+            {
+                NameCard = "Ederson Lima",
+                NumberCard = "1111222233334444",
+                ExpirationDateCard = "10/28",
+                CvvCard = "123"
+            };
+            return View(cartDto);
         }
 
         [HttpPost]
@@ -100,17 +110,20 @@ namespace DevStore.WebApp.MVC.Controllers
         {
             var cart = await _orderQueries.GetCartByClient(ClientId);
 
-            //var command = new StartOrderCommand(cart.OrderId, ClientId, cart.Total, cartDto.Payment.NameCard,
-            //    cartDto.Payment.NumberCard, cartDto.Payment.ExpirationDateCard, cartDto.Payment.CvvCard);
+            var command = new StartOrderCommand(ClientId, cart.OrderId, cart.Total, cartDto.Payment.NameCard,
+                cartDto.Payment.NumberCard, cartDto.Payment.ExpirationDateCard, cartDto.Payment.CvvCard);
 
-            //await _mediatorHandler.SendCommand(command);
+            await _mediatorHandler.SendCommand(command);
 
             if (IsValidOperation())
             {
                 return RedirectToAction("Index", "Order");
             }
 
-            return View("OrderSummary", await _orderQueries.GetCartByClient(ClientId));
+            // TODO: Remove after dev test
+            cart.Payment = cartDto.Payment;
+            
+            return View("OrderSummary", cart);
         }
     }
 }
