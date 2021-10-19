@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 using DevStore.Catalog.Application.Services;
@@ -12,18 +15,20 @@ using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
 
+using Newtonsoft.Json;
+
 namespace DevStore.WebApp.MVC.Controllers
 {
     public class CartController : BaseController
     {
         private readonly ICourseAppService _courseAppService;
         private readonly IOrderQueries _orderQueries;
-        private readonly IMediatorHandler _mediatorHandler;
+        private readonly IBusHandler _mediatorHandler;
 
         public CartController(ICourseAppService courseAppService,
                               IOrderQueries orderQueries,
                               INotificationHandler<DomainNotification> notifications,
-                              IMediatorHandler mediatorHandler) : base(notifications, mediatorHandler)
+                              IBusHandler mediatorHandler) : base(notifications, mediatorHandler)
         {
             _courseAppService = courseAppService;
             _orderQueries = orderQueries;
@@ -110,10 +115,29 @@ namespace DevStore.WebApp.MVC.Controllers
         {
             var cart = await _orderQueries.GetCartByClient(ClientId);
 
-            var command = new StartOrderCommand(ClientId, cart.OrderId, cart.Total, cartDto.Payment.NameCard,
-                cartDto.Payment.NumberCard, cartDto.Payment.ExpirationDateCard, cartDto.Payment.CvvCard);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44348/api/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            await _mediatorHandler.SendCommand(command);
+                var json = JsonConvert.SerializeObject(cartDto);
+                var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync("order/create", data);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var localtion = response.Headers.Location;
+                }
+            }
+
+            //var cart = await _orderQueries.GetCartByClient(ClientId);
+
+            //var command = new StartOrderCommand(ClientId, cart.OrderId, cart.Total, cartDto.Payment.NameCard,
+            //    cartDto.Payment.NumberCard, cartDto.Payment.ExpirationDateCard, cartDto.Payment.CvvCard);
+
+            //await _mediatorHandler.SendCommand(command);
 
             if (IsValidOperation())
             {
@@ -122,7 +146,7 @@ namespace DevStore.WebApp.MVC.Controllers
 
             // TODO: Remove after dev test
             cart.Payment = cartDto.Payment;
-            
+
             return View("OrderSummary", cart);
         }
     }

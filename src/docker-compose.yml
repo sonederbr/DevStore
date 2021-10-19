@@ -2,17 +2,29 @@ version: '3.7'
 
 services:
 
-  eventstore:
-    container_name: esdb-docs-v5
-    image: eventstore/eventstore
-    ports:
-      - '2113:2113'
-      - '1113:1113'
-    environment:
-      EVENTSTORE_EXT_HTTP_PORT: 2113
-      EVENTSTORE_EXT_TCP_PORT: 1113
-      EVENTSTORE_RUN_PROJECTIONS: all
-      EVENTSTORE_START_STANDARD_PROJECTIONS: 'true'
-      PROJECTION_THREADS: 8
-      EVENTSTORE_INSECURE: 'true'
-      EVENTSTORE_ENABLE_EXTERNAL_TCP: 'true'
+    eventstore:
+        container_name: esdb-docs-v5
+        image: eventstore/eventstore
+        ports:
+            - '2113:2113'
+            - '1113:1113'
+        environment:
+            EVENTSTORE_CLUSTER_SIZE: 1
+            EVENTSTORE_RUN_PROJECTIONS: "All"
+            EVENTSTORE_START_STANDARD_PROJECTIONS: "true"
+            EVENTSTORE_EXT_TCP_PORT: 1113
+            EVENTSTORE_HTTP_PORT: 2113
+            EVENTSTORE_INSECURE: "true"
+            EVENTSTORE_ENABLE_EXTERNAL_TCP: "true"
+            EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: "true"
+
+    rabbitmq-demo:
+        image: 'rabbitmq:3.6-management-alpine'
+        ports: 
+            - '5672:5672'
+            - '15672:15672'
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+            RABBITMQ_DEFAULT_USER: "rabbitmq"
+            RABBITMQ_DEFAULT_PASS: "rabbitmq"
+            RABBITMQ_DEFAULT_VHOST: "/"

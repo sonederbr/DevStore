@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
+
 namespace DevStore.Core.Messages.CommonMessages.DomainEvents
 {
     public abstract class Entity
     {
         public Guid Id { get; set; }
         private List<Event> _notifications;
+        private List<IntegrationEvent> _integratedNotifications;
         public IReadOnlyCollection<Event> Notifications => _notifications?.AsReadOnly();
+        public IReadOnlyCollection<IntegrationEvent> IntegratedNotifications => _integratedNotifications?.AsReadOnly();
 
         protected Entity()
         {
@@ -23,6 +27,22 @@ namespace DevStore.Core.Messages.CommonMessages.DomainEvents
         public void RemoveEvent(Event @event)
         {
             _notifications?.Remove(@event);
+        }
+
+        public void AddIntegrationEvent(IntegrationEvent @event)
+        {
+            _integratedNotifications = _integratedNotifications ?? new List<IntegrationEvent>();
+            _integratedNotifications.Add(@event);
+        }
+
+        public void RemoveIntegrationEvent(IntegrationEvent @event)
+        {
+            _integratedNotifications?.Remove(@event);
+        }
+
+        public void ClearIntegrationEvents()
+        {
+            _integratedNotifications?.Clear();
         }
 
         public void ClearEvents()

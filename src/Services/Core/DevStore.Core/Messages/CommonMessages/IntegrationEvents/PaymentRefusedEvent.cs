@@ -12,7 +12,7 @@ namespace DevStore.Core.Messages.CommonMessages.IntegrationEvents
 
         public PaymentRefusedEvent(Guid paymentId, Guid transactionId, Guid orderId, Guid clientId, decimal total)
         {
-            AggregateId = paymentId;
+            AggregateId = orderId;
             PaymentId = paymentId;
             TransactionId = transactionId;
             OrderId = orderId;

@@ -1,63 +1,62 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-using DevStore.Communication.Mediator;
+using DevStore.Core.Communication.Bus;
 using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
 
-using MediatR;
+using Rebus.Handlers;
 
 namespace DevStore.Catalog.Domain.Events
 {
     public class CourseEventHandler :
-        INotificationHandler<AlmostFullCourseEvent>,
-        INotificationHandler<OrderStartedEvent>,
-        INotificationHandler<OrderCanceledEvent>
+        IHandleMessages<AlmostFullCourseEvent>,
+        IHandleMessages<OrderStartedEvent>,
+        IHandleMessages<OrderCanceledEvent>
     {
         private readonly ICourseRepository _courseRepository;
         private readonly ICourseService _courseService;
-        private readonly IMediatorHandler _mediatorHandler;
+        private readonly IBusHandler _bus;
 
         public CourseEventHandler(
             ICourseRepository courseRepository,
             ICourseService courseService,
-            IMediatorHandler mediatorHandler)
+            IBusHandler bus)
         {
             _courseRepository = courseRepository;
             _courseService = courseService;
-            _mediatorHandler = mediatorHandler;
+            _bus = bus;
         }
 
-        public async Task Handle(AlmostFullCourseEvent message, CancellationToken cancellationToken)
+        public async Task Handle(AlmostFullCourseEvent message)
         {
             var course = await _courseRepository.GetById(message.AggregateId);
 
             // Enviar um email para aquisicao de mais produtos.
         }
 
-        public async Task Handle(OrderStartedEvent message, CancellationToken cancellationToken)
+        public async Task Handle(OrderStartedEvent message)
         {
-            var result = await _courseService.EnrolCourse(message.CoursesOrder);
+            var result = await _courseService.EnrolCourse(message.CourseIds);
 
             if (result)
             {
-                await _mediatorHandler.PublishEvent(new OrderEnrolledAcceptedEvent(message.OrderId, 
+                await _bus.PublishIntegrationEvent(new OrderEnrolledAcceptedEvent(message.OrderId, 
                                                                                          message.ClientId, 
                                                                                          message.Total, 
-                                                                                         message.CoursesOrder, 
                                                                                          message.NameCard, 
                                                                                          message.NumberCard, 
                                                                                          message.ExpirationDateCard, 
-                                                                                         message.CvvCard));
+                                                                                         message.CvvCard,
+                                                                                         message.CourseIds));
             }
             else
             {
-               await  _mediatorHandler.PublishEvent(new OrderEnrolledRejectedEvent(message.OrderId, message.ClientId));
+               await  _bus.PublishIntegrationEvent(new OrderEnrolledRejectedEvent(message.OrderId, message.ClientId));
             }
         }
 
-        public async Task Handle(OrderCanceledEvent message, CancellationToken cancellationToken)
+        public async Task Handle(OrderCanceledEvent message)
         {
-            await _courseService.DisenrollCourse(message.CoursesOrder);
+            await _courseService.DisenrollCourse(message.CourseIds);
         }
     }
 }

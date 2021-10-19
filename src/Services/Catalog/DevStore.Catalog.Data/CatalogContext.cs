@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DevStore.Catalog.Domain;
 using DevStore.Core.Data;
 using DevStore.Core.Messages;
+using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -37,6 +38,7 @@ namespace DevStore.Catalog.Data
             }
 
             modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<IntegrationEvent>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogContext).Assembly);
 

@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using DevStore.Communication.Mediator;
+using DevStore.Core.Communication.Bus;
 using DevStore.Core.Data;
 using DevStore.Core.Messages;
+using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
 using DevStore.Finance.Business;
 
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +14,12 @@ namespace DevStore.Finance.Data
 {
     public class FinanceContext : DbContext, IUnitOfWork
     {
-        private readonly IMediatorHandler _mediatorHandler;
+        private readonly IBusHandler _bus;
 
-        public FinanceContext(DbContextOptions<FinanceContext> options, IMediatorHandler rebusHandler)
+        public FinanceContext(DbContextOptions<FinanceContext> options, IBusHandler bus)
             : base(options)
         {
-            _mediatorHandler = rebusHandler ?? throw new ArgumentNullException(nameof(rebusHandler));
+            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
         public DbSet<Payment> Payments { get; set; }
@@ -39,6 +40,7 @@ namespace DevStore.Finance.Data
             }
 
             modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<IntegrationEvent>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FinanceContext).Assembly);
 
@@ -76,7 +78,7 @@ namespace DevStore.Finance.Data
             }
 
             var sucess = await base.SaveChangesAsync() > 0;
-            if (sucess) await _mediatorHandler.PublishEvents(this);
+            if (sucess) await _bus.PublishEvents(this);
 
             return sucess;
         }

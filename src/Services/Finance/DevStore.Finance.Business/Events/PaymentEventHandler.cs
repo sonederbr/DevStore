@@ -1,14 +1,13 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using DevStore.Core.DomainObjects.DTO;
 using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
 
-using MediatR;
+using Rebus.Handlers;
 
 namespace DevStore.Finance.Business.Events
 {
-    public class PaymentEventHandler : INotificationHandler<OrderEnrolledAcceptedEvent>
+    public class PaymentEventHandler : IHandleMessages<OrderEnrolledAcceptedEvent>
     {
         private readonly IPaymentService _paymentService;
 
@@ -17,7 +16,7 @@ namespace DevStore.Finance.Business.Events
             _paymentService = pagamentoService;
         }
 
-        public async Task Handle(OrderEnrolledAcceptedEvent message, CancellationToken cancellationToken)
+        public async Task Handle(OrderEnrolledAcceptedEvent message)
         {
             var pagamentoPedido = new PaymentOrderDto
             {

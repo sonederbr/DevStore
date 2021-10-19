@@ -1,10 +1,10 @@
 ﻿using System;
 
-using DevStore.Core.Messages;
+using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
 
 namespace DevStore.Sales.Application.Events
 {
-    public class OrderFinishedEvent : Event
+    public class OrderFinishedEvent : IntegrationEvent
     {
         public Guid OrderId { get; private set; }
 

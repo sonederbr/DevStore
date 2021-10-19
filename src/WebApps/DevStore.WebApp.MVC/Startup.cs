@@ -1,9 +1,14 @@
 using AutoMapper;
 
-using DevStore.Catalog.Application.AutoMapper;
-using DevStore.Catalog.Data;
-using DevStore.Finance.Data;
-using DevStore.Sales.Data;
+//using DevStore.Catalog.Application.AutoMapper;
+//using DevStore.Catalog.Data;
+//using DevStore.Catalog.Domain.Events;
+using DevStore.Core.Messages;
+//using DevStore.Finance.Business.Events;
+//using DevStore.Finance.Data;
+//using DevStore.Sales.Application;
+//using DevStore.Sales.Application.Commands;
+//using DevStore.Sales.Data;
 using DevStore.WebApp.MVC.Data;
 using DevStore.WebApp.MVC.Setup;
 
@@ -16,6 +21,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using Rebus.Persistence.InMem;
+using Rebus.Routing.TypeBased;
+using Rebus.ServiceProvider;
+using Rebus.Transport.InMem;
 
 namespace DevStore.WebApp.MVC
 {
@@ -33,17 +43,47 @@ namespace DevStore.WebApp.MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var nomeFila = "fila_rebus";
+
+            services.AddRebus(configure => configure
+                .Transport(t => t.UseInMemoryTransport(new InMemNetwork(), nomeFila))
+                //.Transport(t => t.UseRabbitMq("amqp://localhost", nomeFila))
+                .Subscriptions(s => s.StoreInMemory())
+                .Routing(r =>
+                {
+                    r.TypeBased()
+                        .MapAssemblyOf<Message>(nomeFila);
+                        //.MapAssemblyOf<InicializeOrderCommand>(nomeFila)
+                        //.MapAssemblyOf<StartOrderCommand>(nomeFila)
+                        //.MapAssemblyOf<FinishOrderCommand>(nomeFila)
+                        //.MapAssemblyOf<CancelOrderAndDisrollFromCourseCommand>(nomeFila)
+                        //.MapAssemblyOf<CancelOrderCommand>(nomeFila);
+                })
+                .Sagas(s => s.StoreInMemory())
+                .Options(o =>
+                {
+                    o.SetNumberOfWorkers(1);
+                    o.SetMaxParallelism(1);
+                    o.SetBusName("Demo Rebus");
+                })
+            );
+
+            // Register handlers 
+            //services.AutoRegisterHandlersFromAssemblyOf<PaymentEventHandler>();
+            //services.AutoRegisterHandlersFromAssemblyOf<CourseEventHandler>();
+            //services.AutoRegisterHandlersFromAssemblyOf<OrderSaga>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<CatalogContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<CatalogContext>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<SalesContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<SalesContext>(options =>
+            //   options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<FinanceContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<FinanceContext>(options =>
+            //  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -58,7 +98,7 @@ namespace DevStore.WebApp.MVC
             }
 #endif
 
-            services.AddAutoMapper(typeof(DomainToDtoMappingProfile), typeof(DtoToDomainMappingProfile));
+            //services.AddAutoMapper(typeof(DomainToDtoMappingProfile), typeof(DtoToDomainMappingProfile));
 
             services.AddMediatR(typeof(Startup));
 

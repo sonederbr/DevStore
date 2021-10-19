@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using DevStore.Communication.Mediator;
+using DevStore.Core.Communication.Bus;
 using DevStore.Core.Messages.CommonMessages.Notifications;
 
 using MediatR;
@@ -14,12 +14,12 @@ namespace DevStore.WebApp.MVC.Controllers
     public abstract class BaseController : Controller
     {
         private readonly DomainNotificationHandler _notifications;
-        private readonly IMediatorHandler _mediatorHandler;
+        private readonly IBusHandler _mediatorHandler;
 
         protected Guid ClientId = Guid.Parse("4885e451-b0e4-4490-b959-04fabc806d32");
 
         protected BaseController(INotificationHandler<DomainNotification> notifications,
-                                 IMediatorHandler mediatorHandler)
+                                 IBusHandler mediatorHandler)
         {
             _notifications = (DomainNotificationHandler)notifications;
             _mediatorHandler = mediatorHandler;

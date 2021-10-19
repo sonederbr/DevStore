@@ -1,18 +1,20 @@
-﻿using DevStore.Communication.Mediator;
+﻿using DevStore.Core.Communication.Bus;
 using System;
 using System.Threading.Tasks;
 using DevStore.Catalog.Domain.Events;
 using DevStore.Core.DomainObjects.DTO;
+using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
+using System.Collections.Generic;
 
 namespace DevStore.Catalog.Domain
 {
     public class CourseService : ICourseService
     {
         private readonly ICourseRepository _courseRepository;
-        private readonly IMediatorHandler _mediatorHandler;
+        private readonly IBusHandler _mediatorHandler;
 
         public CourseService(ICourseRepository courseRepository, 
-                            IMediatorHandler mediatorHandler)
+                            IBusHandler mediatorHandler)
         {
             _courseRepository = courseRepository;
             _mediatorHandler = mediatorHandler;
@@ -25,11 +27,11 @@ namespace DevStore.Catalog.Domain
             return await _courseRepository.UnitOfWork.Commit();
         }
 
-        public async Task<bool> EnrolCourse(CoursesOrderDto courses)
+        public async Task<bool> EnrolCourse(IEnumerable<Guid> courses)
         {
-            foreach (var item in courses.Items)
+            foreach (var courseId in courses)
             {
-               await DecreaseVacancyInCourse(item.CourseId);
+               await DecreaseVacancyInCourse(courseId);
             }
 
             return await _courseRepository.UnitOfWork.Commit();
@@ -42,11 +44,11 @@ namespace DevStore.Catalog.Domain
             return await _courseRepository.UnitOfWork.Commit();
         }
 
-        public async Task<bool> DisenrollCourse(CoursesOrderDto courses)
+        public async Task<bool> DisenrollCourse(IEnumerable<Guid> courses)
         {
-            foreach (var item in courses.Items)
+            foreach (var courseId in courses)
             {
-                await IncreaseVacancyInCourse(item.CourseId);
+                await IncreaseVacancyInCourse(courseId);
             }
 
             return await _courseRepository.UnitOfWork.Commit();

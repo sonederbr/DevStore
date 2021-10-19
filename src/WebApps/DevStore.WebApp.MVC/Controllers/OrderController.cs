@@ -16,7 +16,7 @@ namespace DevStore.WebApp.MVC.Controllers
 
         public OrderController(IOrderQueries orderQueries,
                                INotificationHandler<DomainNotification> notifications,
-                               IMediatorHandler mediatorHandler) : base(notifications, mediatorHandler)
+                               IBusHandler mediatorHandler) : base(notifications, mediatorHandler)
         {
             _orderQueries = orderQueries;
         }

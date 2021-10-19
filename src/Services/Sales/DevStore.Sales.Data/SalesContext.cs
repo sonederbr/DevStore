@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using DevStore.Communication.Mediator;
+using DevStore.Core.Communication.Bus;
 using DevStore.Core.Data;
 using DevStore.Core.Messages;
+using DevStore.Core.Messages.CommonMessages.IntegrationEvents;
 using DevStore.Sales.Domain;
 
 using Microsoft.EntityFrameworkCore;
@@ -13,13 +14,13 @@ namespace DevStore.Sales.Data
 {
     public class SalesContext : DbContext, IUnitOfWork
     {
-        private readonly IMediatorHandler _mediatorHandler;
+        private readonly IBusHandler _bus;
 
         public SalesContext(DbContextOptions<SalesContext> options,
-                            IMediatorHandler mediatorHandler)
+                            IBusHandler bus)
             : base(options)
         {
-            _mediatorHandler = mediatorHandler;
+            _bus = bus;
             // System.Diagnostics.Debugger.Launch(); 
         }
 
@@ -42,6 +43,7 @@ namespace DevStore.Sales.Data
             }
 
             modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<IntegrationEvent>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SalesContext).Assembly);
 
@@ -81,7 +83,7 @@ namespace DevStore.Sales.Data
             }
 
             var sucess = await base.SaveChangesAsync() > 0;
-            if (sucess) await _mediatorHandler.PublishEvents(this);
+            if (sucess) await _bus.PublishEvents(this);
 
             return sucess;
         }

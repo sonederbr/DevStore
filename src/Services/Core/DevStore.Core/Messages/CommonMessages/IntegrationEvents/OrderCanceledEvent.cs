@@ -1,6 +1,5 @@
 ﻿using System;
-
-using DevStore.Core.DomainObjects.DTO;
+using System.Collections.Generic;
 
 namespace DevStore.Core.Messages.CommonMessages.IntegrationEvents
 {
@@ -8,14 +7,14 @@ namespace DevStore.Core.Messages.CommonMessages.IntegrationEvents
     {
         public Guid OrderId { get; private set; }
         public Guid ClientId { get; private set; }
-        public CoursesOrderDto CoursesOrder { get; private set; }
+        public ICollection<Guid> CourseIds { get; private set; }
 
-        public OrderCanceledEvent(Guid orderId, Guid clientId, CoursesOrderDto items)
+        public OrderCanceledEvent(Guid orderId, Guid clientId, ICollection<Guid> courseIds)
         {
             AggregateId = orderId;
             OrderId = orderId;
             ClientId = clientId;
-            CoursesOrder = items;
+            CourseIds = courseIds;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace DevStore.Sales.Data.Repository
 
         public async Task<Order> GetById(Guid id)
         {
-            return await _context.Orders.FindAsync(id);
+            return await _context.Orders.Include(p => p.OrderItems).Where(c => c.Id == id).FirstAsync();
         }
 
         public async Task<IEnumerable<Order>> GetByClientId(Guid clientId)

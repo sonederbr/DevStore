@@ -20,6 +20,8 @@ using MediatR;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Rebus.Handlers;
+
 using FinanceBusiness = DevStore.Finance.Business;
 using FinanceData = DevStore.Finance.Data;
 using SalesData = DevStore.Sales.Data;
@@ -31,8 +33,8 @@ namespace DevStore.WebApp.MVC.Setup
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            // Mediator
-            services.AddScoped<IMediatorHandler, MediatorHandler>();
+            // Bus
+            services.AddScoped<IBusHandler, BusHandler>();
 
             // Notifications
             services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
@@ -47,32 +49,32 @@ namespace DevStore.WebApp.MVC.Setup
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<CatalogContext>();
 
-            services.AddScoped<INotificationHandler<AlmostFullCourseEvent>, CourseEventHandler>();
-            services.AddScoped<INotificationHandler<OrderStartedEvent>, CourseEventHandler>();
-            services.AddScoped<INotificationHandler<OrderCanceledEvent>, CourseEventHandler>();
+            // Domain Events
+            services.AddScoped<IHandleMessages<AlmostFullCourseEvent>, CourseEventHandler>();
+            
+            // Integration Events
+            services.AddScoped<IHandleMessages<OrderStartedEvent>, CourseEventHandler>();
+            services.AddScoped<IHandleMessages<OrderCanceledEvent>, CourseEventHandler>();
 
             // Sales
             services.AddScoped<SalesDomain.IOrderRepository, SalesData.Repository.OrderRepository>();
             services.AddScoped<IOrderQueries, OrderQueries>();
             services.AddScoped<SalesContext>();
 
-            services.AddScoped<IRequestHandler<AddOrderItemCommand, bool>, OrderCommandHandler>();
-            services.AddScoped<IRequestHandler<RemoveOrderItemCommand, bool>, OrderCommandHandler>();
-            services.AddScoped<IRequestHandler<ApplyVoucherOrderCommand, bool>, OrderCommandHandler>();
-            services.AddScoped<IRequestHandler<StartOrderCommand, bool>, OrderCommandHandler>();
-            services.AddScoped<IRequestHandler<FinishOrderCommand, bool>, OrderCommandHandler>();
-            services.AddScoped<IRequestHandler<CancelOrderAndDisrollFromCourseCommand, bool>, OrderCommandHandler>();
-            services.AddScoped<IRequestHandler<CancelOrderCommand, bool>, OrderCommandHandler>();
+            //services.AddScoped<IHandleMessages<AddOrderItemCommand>, OrderCommandHandler>();
+            //services.AddScoped<IHandleMessages<RemoveOrderItemCommand>, OrderCommandHandler>();
+            //services.AddScoped<IHandleMessages<ApplyVoucherOrderCommand>, OrderCommandHandler>();
+            //services.AddScoped<IHandleMessages<StartOrderCommand>, OrderCommandHandler>();
+            //services.AddScoped<IHandleMessages<FinishOrderCommand>, OrderCommandHandler>();
+            //services.AddScoped<IHandleMessages<CancelOrderAndDisrollFromCourseCommand>, OrderCommandHandler>();
+            //services.AddScoped<IHandleMessages<CancelOrderCommand>, OrderCommandHandler>();
 
-            services.AddScoped<INotificationHandler<OrderDraftStartedEvent>, OrderEventHandler>();
-            services.AddScoped<INotificationHandler<OrderItemAddedEvent>, OrderEventHandler>();
-            services.AddScoped<INotificationHandler<OrderUpdatedEvent>, OrderEventHandler>();
-            services.AddScoped<INotificationHandler<OrderItemRemovedEvent>, OrderEventHandler>();
-            services.AddScoped<INotificationHandler<OrderEmptyRemovedEvent>, OrderEventHandler>();
-            services.AddScoped<INotificationHandler<OrderVoucherAppliedEvent>, OrderEventHandler>();
-            services.AddScoped<INotificationHandler<OrderEnrolledRejectedEvent>, OrderEventHandler>();
-            services.AddScoped<INotificationHandler<PaymentRealizedEvent>, OrderEventHandler>();
-            services.AddScoped<INotificationHandler<PaymentRefusedEvent>, OrderEventHandler>();
+            //services.AddScoped<IHandleMessages<OrderDraftStartedEvent>, OrderEventHandler>();
+            //services.AddScoped<IHandleMessages<OrderItemAddedEvent>, OrderEventHandler>();
+            //services.AddScoped<IHandleMessages<OrderUpdatedEvent>, OrderEventHandler>();
+            //services.AddScoped<IHandleMessages<OrderItemRemovedEvent>, OrderEventHandler>();
+            //services.AddScoped<IHandleMessages<OrderEmptyRemovedEvent>, OrderEventHandler>();
+            //services.AddScoped<IHandleMessages<OrderVoucherAppliedEvent>, OrderEventHandler>();
 
             // Finance
             services.AddScoped<FinanceBusiness.IOrderRepository, FinanceData.Repository.OrderRepository>();
@@ -82,7 +84,7 @@ namespace DevStore.WebApp.MVC.Setup
             services.AddScoped<IConfigurationManager, ConfigurationManager>();
             services.AddScoped<FinanceData.FinanceContext>();
 
-            services.AddScoped<INotificationHandler<OrderEnrolledAcceptedEvent>, PaymentEventHandler>();
+            services.AddScoped<IHandleMessages<OrderEnrolledAcceptedEvent>, PaymentEventHandler>();
         }
     }
 }
